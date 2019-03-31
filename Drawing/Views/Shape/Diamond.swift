@@ -11,21 +11,12 @@ import UIKit
 
 class Diamond: Shape {
     
-    override func append(text: String) {
-        if instructions.isEmpty {
-            instructions.append(IfInstruction())
-        }
-        let instruction = instructions[0] as! IfInstruction
-        instruction.operator = Instruction.Operator(rawValue: text)!
-        tableView.reloadData()
-    }
-    
-    init(center: CGPoint, scale: CGFloat) {
-        super.init(frame: CGRect(x: center.x-65*scale-1, y: center.y-40*scale-1, width: scale*130+2, height: scale*80+2))
+    init(center: CGPoint) {
+        super.init(frame: CGRect(x: center.x-65, y: center.y-40, width: 130, height: 80))
     }
     
     convenience init(block: Block) {
-        self.init(center: block.center, scale: 1)
+        self.init(center: block.center)
         instructions = block.instructions
     }
     
@@ -34,38 +25,42 @@ class Diamond: Shape {
     }
     
     override var path: UIBezierPath {
-        let path = UIBezierPath()
-        path.move(to: bounds.leftCenter)
-        path.addLine(to: bounds.upperCenter)
-        path.addLine(to: bounds.rightCenter)
-        path.addLine(to: bounds.bottomCenter)
-        path.addLine(to: bounds.leftCenter)
-        return path
+        return Diamond.path(within: bounds)
     }
     
     var nextShapeWhenFalse: Shape? {
         didSet {
-            canvas?.resetLines()
+            setLine()
         }
     }
     
-    override var line: Line? {
-        if let line = super.line {
+    override func setLine() {
+        super.setLine()
+        if let line = line {
             line.color = UIColor.green
+        }
+        lineWhenFalse = nextShapeWhenFalse == nil ? nil : LineForConnecting(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
+    }
+    
+    var lineWhenFalse: LineForConnecting?
+    
+    override func related(to shape: Shape) -> Bool {
+        return super.related(to: shape) || nextShapeWhenFalse == shape
+    }
+    
+    override func lineForPanning(to point: CGPoint) -> LineForConnecting? {
+        if let line = super.lineForPanning(to: point) {
+            line.color = .green
             return line
         }
-        return nil
+        return nextShapeWhenFalse == nil ? LineForConnecting(initiator: self, point: point, color: .red) : nil
     }
     
-    var lineWhenFalse: Line? {
-        return nextShapeWhenFalse == nil ? nil : Line(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
-    }
-    
-    override func extendedEntry(for positionInCanvas: CGPoint) -> CGPoint? {
-        if positionInCanvas != center {
-            let line = LinearFunction(start: center, end: positionInCanvas)!
+    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {
+        if positionInShapeView != center {
+            let line = LinearFunction(start: center, end: positionInShapeView)!
             let lineOfFrame: LinearFunction
-            switch (positionInCanvas.x>center.x, positionInCanvas.y>center.y) {
+            switch (positionInShapeView.x>center.x, positionInShapeView.y>center.y) {
             case (true, true): lineOfFrame = LinearFunction(start: frame.rightCenter, end: frame.bottomCenter)!
             case (true, false): lineOfFrame = LinearFunction(start: frame.rightCenter, end: frame.upperCenter)!
             case (false, true): lineOfFrame = LinearFunction(start: frame.leftCenter, end: frame.bottomCenter)!
@@ -73,7 +68,7 @@ class Diamond: Shape {
             }
             return line.intersection(with: lineOfFrame)!
         }
-        return nil
+        return frame.leftCenter
     }
     
     override func deleteConnection(to shape: Shape) {
@@ -83,24 +78,36 @@ class Diamond: Shape {
         }
     }
     
+    override func deleteConnection(with color: UIColor) {
+        if color == .green {
+            nextShape = nil
+        } else if color == .red {
+            nextShapeWhenFalse = nil
+        }
+    }
+    
     override func canConnect(to target: Shape) -> Bool {
-        return super.canConnect(to: target) && target != nextShapeWhenFalse
+        return super.canConnect(to: target) && nextShapeWhenFalse != target
+    }
+    
+    override func connect(to target: Shape, with color: UIColor) {
+        if color == .green {
+            nextShape = target
+        } else if color == .red {
+            nextShapeWhenFalse = target
+        }
+    }
+    
+    static func path(within bounds: CGRect) -> UIBezierPath {
+        let actualBounds = CGRect(x: bounds.minX+1, y: bounds.minY+1, width: bounds.width-2, height: bounds.height-2)
+        let path = UIBezierPath()
+        path.move(to: actualBounds.leftCenter)
+        path.addLine(to: actualBounds.upperCenter)
+        path.addLine(to: actualBounds.rightCenter)
+        path.addLine(to: actualBounds.bottomCenter)
+        path.addLine(to: actualBounds.leftCenter)
+        return path
     }
     
 }
 
-extension Diamond {
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: InstructionCell
-        if formerCenter == nil {
-            cell = tableView.dequeueReusableCell(withIdentifier: "InstructionCell", for: indexPath) as! InstructionCell
-            cell.textLabel?.font = cell.textLabel?.font.withSize(tableView.rowHeight)
-            cell.textLabel?.adjustsFontSizeToFitWidth = true
-            cell.textLabel?.textAlignment = .center
-        } else {
-            cell = tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! DoubleTextFieldCell
-        }
-        cell.instruction = instructions[0]
-        return cell
-    }
-}

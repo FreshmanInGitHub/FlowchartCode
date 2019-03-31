@@ -9,22 +9,19 @@
 import UIKit
 
 class SingleTextFieldCell: InstructionCell, UITextFieldDelegate {
-
-    override var frame: CGRect {
-        didSet {
-            let width = bounds.width
-            let height = bounds.height-5
-            firstLabel.frame = CGRect(x: 0, y: 5, width: width*0.3, height: height)
-            firstTextField.frame = CGRect(x: width*0.3, y: 5, width: width*0.7, height: height)
-        }
+    
+    @IBOutlet weak var firstLabel: UILabel!
+    @IBOutlet weak var firstTextField: UITextField!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        firstTextField.delegate = self
     }
     
-    var firstLabel = UILabel(frame: CGRect())
-    var firstTextField = UITextField(frame: CGRect())
-    
-    override var instruction: Instruction {
-        didSet {
-            initialization()
+    override func didSetInstruction() {
+        if let instruction = instruction as? InteractionInstruction {
+            firstLabel?.text = instruction.type.rawValue
+            firstTextField?.text = instruction.content
         }
     }
     
@@ -38,40 +35,11 @@ class SingleTextFieldCell: InstructionCell, UITextFieldDelegate {
     }
     
     func saveToInstruction() {
-        if let instruction = instruction as? PrintInstruction {
-            instruction.text = firstTextField.text ?? ""
-        } else if let instruction = instruction as? InOutInstruction {
-            instruction.variable = firstTextField.text ?? ""
+        if let instruction = instruction as? InteractionInstruction {
+            instruction.content = firstTextField.text ?? ""
         }
     }
     
-    func initialization() {
-        textLabel?.text = nil
-        
-        firstTextField.textAlignment = .center
-        firstLabel.textAlignment = .center
-        
-        firstTextField.adjustsFontSizeToFitWidth = true
-        
-        firstTextField.delegate = self
-        
-        addSubview(firstTextField)
-        addSubview(firstLabel)
-        
-        let font = textLabel?.font.withSize(19)
-        firstTextField.font = font
-        firstLabel.font = font
-        
-        if let instruction = instruction as? PrintInstruction {
-            firstTextField.placeholder = "text"
-            firstLabel.text = "Print:"
-            firstTextField.text = instruction.text
-        } else if let instruction = instruction as? InOutInstruction {
-            firstTextField.placeholder = "var"
-            firstLabel.text = instruction is InputInstruction ? "Input:" : "Output:"
-            firstTextField.text = instruction.variable
-        }
-    }
 
 
 }

@@ -12,27 +12,18 @@ class InstructionCell: UITableViewCell {
 
     var instruction = Instruction() {
         didSet {
-            textLabel?.text = instruction.description
-            textLabel?.baselineAdjustment = .alignCenters
-            backgroundColor = .clear
+            didSetInstruction()
         }
     }
     
+    func didSetInstruction() {
+        textLabel?.text = instruction.description
+        
+    }
+    
     var isFinished: Bool {
-        if !instruction.isFinished { flash() }
+        if !instruction.isFinished { shiver() }
         return instruction.isFinished
     }
 
-}
-
-extension UITableViewCell {
-    func flash() {
-        UIView.animate(withDuration: 0.1, animations: {self.backgroundColor = UIColor(white: 0.9, alpha: 1)}, completion: {_ in
-            UIView.animate(withDuration: 0.1, animations: {self.backgroundColor = .clear}, completion: {_ in
-                UIView.animate(withDuration: 0.1, animations: {self.backgroundColor = UIColor(white: 0.9, alpha: 1)}, completion: {_ in
-                    UIView.animate(withDuration: 0.1, animations: {self.backgroundColor = .clear})
-                })
-            })
-        })
-    }
 }

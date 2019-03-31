@@ -11,8 +11,8 @@ import UIKit
 
 class Oval: Shape {
     
-    init(center: CGPoint, scale: CGFloat) {
-        super.init(frame: CGRect(x: center.x-60*scale-1, y: center.y-35*scale-1, width: 120*scale+2, height: 70*scale+2))
+    init(center: CGPoint) {
+        super.init(frame: CGRect(x: center.x-60, y: center.y-35, width: 120, height: 70))
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -20,19 +20,19 @@ class Oval: Shape {
     }
     
     convenience init(block: Block) {
-        self.init(center: block.center, scale: 1)
+        self.init(center: block.center)
         instructions = block.instructions
     }
     
     override var path: UIBezierPath {
-        return UIBezierPath(ovalIn: CGRect(x: 1, y: 1, width: bounds.maxX-2, height: bounds.maxY-2))
+        return Oval.path(within: bounds)
     }
     
-    override func extendedEntry(for positionInCanvas: CGPoint) -> CGPoint? {
-        if positionInCanvas != center {
+    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint? {
+        if positionInShapeView != center {
             let squareA = (frame.minX-center.x).square
             let squareB = (frame.minY-center.y).square
-            let targetInView = positionInCanvas - center
+            let targetInView = positionInShapeView - center
             let squareX = targetInView.x.square
             let line = LinearFunction(start: targetInView, end: CGPoint())!
             if line.b == 0 {
@@ -47,34 +47,11 @@ class Oval: Shape {
                 return CGPoint(x: x+center.x, y: y+center.y)
             }
         }
-        return nil
+        return frame.leftCenter
     }
     
-    override func append(text: String) {
-        if instructions.isEmpty {
-            instructions.append(PrintInstruction())
-        }
-        switch text {
-        case "Input": instructions[0] = InputInstruction()
-        case "Output": instructions[0] = OutputInstruction()
-        default: instructions[0] = PrintInstruction()
-        }
-        tableView.reloadData()
+    static func path(within bounds: CGRect) -> UIBezierPath {
+        return UIBezierPath(ovalIn: CGRect(x: bounds.minX+1, y: bounds.minY+1, width: bounds.width-2, height: bounds.height-2))
     }
-    
 }
 
-extension Oval {
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: InstructionCell
-        if formerCenter == nil {
-            cell = tableView.dequeueReusableCell(withIdentifier: "InstructionCell", for: indexPath) as! InstructionCell
-            cell.textLabel?.font = cell.textLabel?.font.withSize(tableView.rowHeight)
-            cell.textLabel?.adjustsFontSizeToFitWidth = true
-        } else {
-            cell = tableView.dequeueReusableCell(withIdentifier: "SingleTextFieldCell", for: indexPath) as! SingleTextFieldCell
-        }
-        cell.instruction = instructions[0]
-        return cell
-    }
-}

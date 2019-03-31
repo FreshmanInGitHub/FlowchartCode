@@ -23,6 +23,7 @@ class ProgramController: UITableViewController, UITextFieldDelegate {
     @IBAction func editingDidEnd(_ sender: UITextField) {
         program.title = textField.text ?? "Program"
         title = program.title
+        DataBase.savePrograms()
     }
 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

@@ -8,46 +8,40 @@
 
 import UIKit
 
-class Entrance: UIView {
+class Entrans: UIView {
     
-    var shape: Shape? {
-        didSet { angle = 0 }
-    }
+    var shape: Shape?
     
-    var angle: CGFloat = 0 {
-        didSet { setPath() }
-    }
+    var angle: CGFloat = 0
     
     var position = CGPoint() {
-        didSet { setPath() }
+        didSet {
+            if let shape = shape, let canvas = superview as? Canv {
+                angle = LineForConnecting.angle(between: position, and: canvas.position(for: shape.center))
+            }
+            setPath()
+        }
     }
     
     var isHighlighted = false {
-        didSet { setPath() }
+        didSet { setNeedsDisplay() }
     }
     
     var path = UIBezierPath()
     
     func setPath() {
         let path = UIBezierPath()
-        if let canvas = superview as? Canvas {
-            let width = canvas.scale*40
-            let height = canvas.scale*15
-            path.move(to: CGPoint(x: -width/4, y: height/2))
+        if let canvas = superview as? Canv {
+            path.move(to: CGPoint(x: -10, y: 7.5))
             path.addLine(to: CGPoint())
-            path.addLine(to: CGPoint(x: -width/4, y: -height/2))
+            path.addLine(to: CGPoint(x: -10, y: -7.5))
             path.move(to: CGPoint())
-            path.addLine(to: CGPoint(x: -width, y: 0))
+            path.addLine(to: CGPoint(x: -40, y: 0))
             if let shape = shape {
                 path.apply(CGAffineTransform(rotationAngle: angle))
                 path.apply(CGAffineTransform(translation: canvas.position(for: shape.extendedEntry(for: path.currentPoint+shape.center)!)))
             } else {
-                path.apply(CGAffineTransform(translationX: position.x+canvas.scale*20, y: position.y))
-            }
-            if isHighlighted {
-                path.lineWidth = 3*canvas.scale
-            } else {
-                path.lineWidth = 2*canvas.scale
+                path.apply(CGAffineTransform(translationX: position.x+20, y: position.y))
             }
         }
         self.path = path
@@ -55,16 +49,22 @@ class Entrance: UIView {
     }
     
     override func draw(_ rect: CGRect) {
+        if let canvas = superview as? Canv {
         if isHighlighted {
+            path.lineWidth = 1 + 2 * canvas.scale
             UIColor.lightGray.setStroke()
         } else {
+            path.lineWidth = 1 + canvas.scale
             UIColor.gray.setStroke()
         }
         path.stroke()
+        }
     }
     
     override func didMoveToSuperview() {
-        position = center
+        if shape == nil {
+            position = center
+        }
         setPath()
     }
     

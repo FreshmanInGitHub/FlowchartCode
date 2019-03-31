@@ -11,35 +11,19 @@ import UIKit
 class DrawingController: UIViewController {
     var program = Program()
     
-    @IBOutlet var pinchGestureRecognizer: UIPinchGestureRecognizer!
-    @IBOutlet var panGestureRecognizer: UIPanGestureRecognizer!
-    @IBOutlet var longPressGestureRecognizer: UILongPressGestureRecognizer!
-    @IBOutlet var doubleTapGestureRecognizer: UITapGestureRecognizer!
-    @IBOutlet var longPressGestureRecognizerInTableView: UILongPressGestureRecognizer!
-    @IBOutlet var tapGestureRecognizer: UITapGestureRecognizer!
-    var enableGestureRecognizers = true {
-        didSet {
-            pinchGestureRecognizer.isEnabled = enableGestureRecognizers
-            panGestureRecognizer.isEnabled = enableGestureRecognizers
-            longPressGestureRecognizer.isEnabled = enableGestureRecognizers
-            doubleTapGestureRecognizer.isEnabled = enableGestureRecognizers
-            tapGestureRecognizer.isEnabled = enableGestureRecognizers
-            longPressGestureRecognizerInTableView.isEnabled = !enableGestureRecognizers
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        enableGestureRecognizers = true
         canvas.scale = program.scale
         for block in program.blocks {
             canvas.shapeView.addSubview(Shape.generateShape(with: block))
         }
+        let shapes = canvas.shapes
         for block in program.blocks {
             let index = program.blocks.firstIndex(of: block)!
-            let shape = canvas.shapes[index]
+            let shape = shapes[index]
             if let nextIndex = block.next {
-                shape.nextShape = canvas.shapes[nextIndex]
+                shape.nextShape = shapes[nextIndex]
             }
             if let nextIndexWhenFalse = block.nextWhenFalse, let diamond = shape as? Diamond {
                 diamond.nextShapeWhenFalse = canvas.shapes[nextIndexWhenFalse]
@@ -49,10 +33,11 @@ class DrawingController: UIViewController {
             canvas.entrance.angle = entrance.angle
             canvas.entrance.shape = canvas.shapes[entrance.index]
         }
+        canvas.moveToCenterOfShapes()
     }
 
     
-    @IBOutlet var canvas: Canvas!
+    @IBOutlet var canvas: Canv!
     var formerPosition = CGPoint()
     
     @IBAction func longPressed(_ sender: UILongPressGestureRecognizer) {
@@ -64,56 +49,39 @@ class DrawingController: UIViewController {
         case .began:
             if canvas.entrance.path.bounds.contains(position), let entrance = canvas.entrance {
                 canvas.draggingView = entrance
-                if entrance.shape != nil {
-                    entrance.shape = nil
-                    entrance.position = position
-                }
             } else if let shape = canvas.source(at: position) ?? canvas.shape(at: position) {
                 canvas.draggingView = shape
-            } else if let line = canvas.line(at: position) {
+            } else if let line = canvas.line(positionInCanvas: position) {
                 canvas.lines.remove(at: canvas.lines.firstIndex(of: line)!)
-                canvas.draggingLine = line.newLine(with: position)
+                canvas.draggingLine = line.new(point: position)
                 canvas.bottomBar.state = .deleteLabel
             }
         case .changed:
-            if let entrance = canvas.draggingView as? Entrance {
-                entrance.translate(with: position - formerPosition)
-                if let shape = canvas.shape(at: position) {
-                    entrance.shape = shape
-                    entrance.angle = Line.angle(between: position, and: canvas.position(for: shape.center))
-                } else {
-                    entrance.shape = nil
-                    entrance.angle = 0
-                }
+            if let entrance = canvas.draggingView as? Entrans {
+                entrance.shape = canvas.shape(at: position)
+                UIView.animate(withDuration: 2, animations: {entrance.position = position})
             } else if let shape = canvas.draggingView as? Shape {
                 shape.translate(with: position - formerPosition)
+                canvas.resetLinesRelated(to: shape)
             } else if let line = canvas.draggingLine {
-                canvas.draggingLine = line.newLine(with: position)
+                canvas.draggingLine = line.new(point: position)
             } else {
                 canvas.translate(with: position - formerPosition)
             }
         default:
             if canvas.draggingView != nil {
                 if let shape = canvas.draggingView as? Shape, canvas.bottomBar.frame.contains(position) {
-                    canvas.delete(shape: shape)
+                    self.canvas.delete(shape: shape)
                 }
                 canvas.draggingView = nil
             } else if let line = canvas.draggingLine {
                 if let target = canvas.shape(at: position), line.initiator.canConnect(to: target) {
-                    if line.color == .red, let diamond = line.initiator as? Diamond {
-                        diamond.nextShapeWhenFalse = target
-                    } else {
-                        line.initiator.nextShape = target
-                    }
+                    line.initiator.connect(to: target, with: line.color)
                 } else if canvas.bottomBar.frame.contains(position) {
-                    if line.color == .red, let diamond = line.initiator as? Diamond {
-                        diamond.nextShapeWhenFalse = nil
-                    } else {
-                        line.initiator.nextShape = nil
-                    }
+                    line.initiator.deleteConnection(with: line.color)
                 }
                 canvas.draggingLine = nil
-                canvas.bottomBar.state = .sources
+                canvas.bottomBar.state = .hidden
             }
         }
         formerPosition = position
@@ -121,32 +89,21 @@ class DrawingController: UIViewController {
     
     @IBAction func panned(_ sender: UIPanGestureRecognizer) {
         let position = sender.location(in: canvas)
-        if let deleteLabel = canvas.bottomBar.backgroundView as? UILabel {
-            deleteLabel.isHighlighted = canvas.bottomBar.frame.contains(position)
-        }
         switch sender.state {
         case .began:
-            if let shape = canvas.shape(at: position) {
-                if shape.nextShape == nil {
-                    canvas.draggingLine = Line(initiator: shape, temporaryTarget: position, color: shape is Diamond ? .green : .black)
-                } else if let diamond = shape as? Diamond, diamond.nextShapeWhenFalse == nil {
-                    canvas.draggingLine = Line(initiator: shape, temporaryTarget: position, color: .red)
-                }
+            if let shape = canvas.shape(at: position), let line = shape.lineForPanning(to: position) {
+                canvas.draggingLine = line
             }
         case .changed:
             if let line = canvas.draggingLine {
-                canvas.draggingLine = line.newLine(with: canvas.positionInShapeView(with: position))
+                canvas.draggingLine = line.new(point: position)
             } else {
                 canvas.translate(with: position - formerPosition)
             }
         default:
             if let line = canvas.draggingLine {
                 if let target = canvas.shape(at: position), line.initiator.canConnect(to: target) {
-                    if line.color == .red, let diamond = line.initiator as? Diamond {
-                        diamond.nextShapeWhenFalse = target
-                    } else {
-                        line.initiator.nextShape = target
-                    }
+                    line.initiator.connect(to: target, with: line.color)
                 }
                 canvas.draggingLine = nil
             }
@@ -156,8 +113,8 @@ class DrawingController: UIViewController {
     
     @IBAction func pinched(_ sender: UIPinchGestureRecognizer) {
         let newScale = sender.scale * canvas.scale
-        if newScale < 0.3 {
-            canvas.scale = 0.3
+        if newScale < 0.4 {
+            canvas.scale = 0.4
         } else if newScale > canvas.maxScale {
             canvas.scale = canvas.maxScale
         } else {
@@ -170,25 +127,25 @@ class DrawingController: UIViewController {
         let position = sender.location(in: canvas)
         if let shape = canvas.shape(at: position) {
             canvas.shapeView.bringSubviewToFront(shape)
-            canvas.resetLines()
+            canvas.setLines()
         }
     }
     
     @IBAction func doubleTapped(_ sender: UITapGestureRecognizer) {
         let position = sender.location(in: canvas)
         if let shape = canvas.shape(at: position) {
-            canvas.selectedShape = shape
-            enableGestureRecognizers = false
+            canvas.editingShape = shape
             navigationItem.rightBarButtonItem = shape is Rect ? editButtonItem : nil
             isEditing = false
-            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(backButtonTapped(_:)))
+            navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(quitEditingShape(_:)))
+        } else {
+            canvas.moveToCenterOfShapes()
         }
     }
     
-    @IBAction func backButtonTapped(_ sender: UIBarButtonItem) {
-        if let shape = canvas.selectedShape, shape.canQuitEditing {
-            canvas.selectedShape = nil
-            enableGestureRecognizers = true
+    @IBAction func quitEditingShape(_ sender: UIBarButtonItem) {
+        if let shape = canvas.editingShape, shape.canQuitEditing {
+            canvas.editingShape = nil
             navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveProgram(_:)))
             navigationItem.leftBarButtonItem = navigationItem.backBarButtonItem
         }
@@ -210,11 +167,11 @@ class DrawingController: UIViewController {
             }
         case .changed:
             if let label = canvas.draggingView as? UILabel {
-                label.frame = label.frame.applying(CGAffineTransform(translation: position - formerPosition))
+                label.translate(with: position - formerPosition)
             }
         default:
-            if let shape = canvas.selectedShape, shape.path.contains(shape.positionInView(point: position)), let label = canvas.draggingView as? UILabel {
-                shape.append(text: label.text!)
+            if let shape = canvas.editingShape, shape.path.contains(sender.location(in: shape)), let label = canvas.draggingView as? UILabel {
+                //shape.append(text: label.text!)
             }
             canvas.draggingView?.removeFromSuperview()
             canvas.draggingView = nil
@@ -228,9 +185,8 @@ class DrawingController: UIViewController {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        if let rect = canvas.selectedShape as? Rect {
+        if let rect = canvas.editingShape as? Rect {
             rect.tableView.isEditing = !editing
-            rect.editing = editing
         }
     }
     

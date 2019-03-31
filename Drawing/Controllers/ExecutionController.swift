@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ExecutionController: UITableViewController, UITextFieldDelegate {
+class ExecutionController: UITableViewController {
     var program = Program()
     var current: Int?
     var register = [String: Double]()
@@ -90,58 +90,26 @@ class ExecutionController: UITableViewController, UITextFieldDelegate {
     func processOval(_ index: Int) -> Int? {
         let block = program.blocks[index]
         var cell: UITableViewCell?
-        if let instruction = block.instructions.first {
+        if let instruction = block.instructions.first as? InteractionInstruction {
             let indexPath = IndexPath(row: cells.count, section: 0)
-            switch instruction {
-            case is InputInstruction:
+            switch instruction.type {
+            case .input:
                 let inputCell = tableView.dequeueReusableCell(withIdentifier: "InputCell", for: indexPath) as! InputCell
-                if let inputInstruction = instruction as? InputInstruction {
-                    inputCell.textField.delegate = self
-                    inputCell.label.text = inputInstruction.variable + " = "
-                    self.current = index
-                }
+                inputCell.textField.delegate = self
+                inputCell.label.text = instruction.content + " = "
+                self.current = index
                 cell = inputCell
-            case is OutputInstruction:
+            case .output:
                 cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                if let outputInstruction = instruction as? OutputInstruction {
-                    cell!.textLabel?.text = outputInstruction.variable + " = " + value(with: outputInstruction.variable).description
-                }
-            default:
+                cell!.textLabel?.text = instruction.content + " = " + value(with: instruction.content).description
+            case .print:
                 cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                if let printInstruction = instruction as? PrintInstruction {
-                    cell!.textLabel?.text = printInstruction.text
-                }
+                cell!.textLabel?.text = instruction.content
             }
             cells.append(cell!)
             tableView.insertRows(at: [indexPath], with: .automatic)
         }
         return cell is InputCell ? nil : block.next
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let _ = Double(textField.text ?? "") {
-            textField.endEditing(true)
-            return true
-        }
-        return false
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        if reason == .committed {
-            let block = program.blocks[current!]
-            if let value = Double(textField.text!), let instruction = block.instructions[0] as? InputInstruction {
-                register[instruction.variable] = value
-                let indexPath = IndexPath(row: cells.count-1, section: 0)
-                let cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                cell.textLabel?.text = instruction.variable + " = " + value.description
-                cells[indexPath.row] = cell
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                let next = block.next
-                current = nil
-                textField.text = nil
-                process(next)
-            }
-        }
     }
     
     func programEnded() {
@@ -156,4 +124,33 @@ class ExecutionController: UITableViewController, UITextFieldDelegate {
         return Double(operand) ?? register[operand] ?? 0
     }
     
+}
+
+extension  ExecutionController: UITextFieldDelegate {
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        if reason == .committed {
+            let block = program.blocks[current!]
+            if let value = Double(textField.text!), let instruction = block.instructions[0] as? InteractionInstruction {
+                register[instruction.content] = value
+                let indexPath = IndexPath(row: cells.count-1, section: 0)
+                let cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
+                cell.textLabel?.text = instruction.content + " = " + value.description
+                cells[indexPath.row] = cell
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+                let next = block.next
+                current = nil
+                textField.text = nil
+                process(next)
+            }
+        }
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let _ = Double(textField.text ?? "") {
+            textField.endEditing(true)
+            return true
+        }
+        textField.shiver()
+        return false
+    }
 }

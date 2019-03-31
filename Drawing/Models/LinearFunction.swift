@@ -38,6 +38,12 @@ struct LinearFunction {
         self.c = -b
     }
     
+    init(a: CGFloat, b: CGFloat, c: CGFloat) {
+        self.a = a
+        self.b = b
+        self.c = c
+    }
+    
     // ax+by+c=0
     // y=kx+b  k=-a  b=-c
     var a: CGFloat
@@ -47,8 +53,8 @@ struct LinearFunction {
         return isHorizontal ? nil : -a
     }
     
-    var isHorizontal: Bool { return b == 0 }
-    var isVertical: Bool { return a == 0 }
+    var isHorizontal: Bool { return a == 0 }
+    var isVertical: Bool { return b == 0 }
     
     func x(with y: CGFloat) -> CGFloat? {
         return isHorizontal ? nil : -(b*y+c)/a
@@ -84,9 +90,9 @@ struct LinearFunction {
     
     func rightAngleLine(with point: CGPoint) -> LinearFunction {
         if isVertical {
-            return LinearFunction(start: CGPoint(x: x(with: point.y)!, y: point.y), end: point)!
+            return LinearFunction(a: 0, b: 1, c: -point.y)
         } else if isHorizontal {
-            return LinearFunction(start: CGPoint(x: point.x, y: y(with: point.x)!), end: point)!
+            return LinearFunction(a: 1, b: 0, c: -point.x)
         } else {
             let otherK = 1/a
             let otherB = point.y-otherK*point.x
@@ -103,8 +109,14 @@ struct LinearFunction {
         case (true, false): return CGPoint(x: line.x(with: -c)!, y: -c)
         case (false, true): return CGPoint(x: x(with: -line.c)!, y: -line.c)
         case (false, false):
-            let x = (c-line.c)/(k!-line.k!)
-            return CGPoint(x: x, y: y(with: x) ?? line.y(with: x)!)
+            if isVertical {
+                return CGPoint(x: -c, y: line.y(with: -c)!)
+            } else if line.isVertical {
+                return CGPoint(x: -line.c, y: y(with: -line.c)!)
+            } else {
+                let x = (c-line.c)/(k!-line.k!)
+                return CGPoint(x: x, y: y(with: x)!)
+            }
         }
     }
 }

@@ -8,19 +8,18 @@
 
 /* Begin PBXBuildFile section */
 		6F1D623821DDFEC6000399C1 /* CollectionViewCellWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1D623721DDFEC6000399C1 /* CollectionViewCellWithLabel.swift */; };
-		6F283A2321C5E7E700E4BF98 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F283A2221C5E7E700E4BF98 /* Line.swift */; };
-		6F33F35621F01E5C00B5ADD2 /* Entrance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F33F35521F01E5C00B5ADD2 /* Entrance.swift */; };
+		6F283A2321C5E7E700E4BF98 /* LineForConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */; };
+		6F33F35621F01E5C00B5ADD2 /* Entrans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F33F35521F01E5C00B5ADD2 /* Entrans.swift */; };
 		6F4D6289221C219200731463 /* InputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D6288221C219200731463 /* InputCell.swift */; };
 		6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */; };
 		6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */; };
+		6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54463E224C7C9300C83BAE /* SourceView.swift */; };
+		6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DB224DC220009A679A /* EntrancePath.swift */; };
+		6F5F87DE224DCEB8009A679A /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DD224DCEB8009A679A /* Line.swift */; };
 		6F629C88222931C7001D9DA1 /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F629C87222931C7001D9DA1 /* ShapeView.swift */; };
-		6F716AC821EECC8600413E18 /* PrintInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716AC721EECC8600413E18 /* PrintInstruction.swift */; };
-		6F716ACC21EECEAD00413E18 /* InOutInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACB21EECEAD00413E18 /* InOutInstruction.swift */; };
-		6F716ACE21EECF7700413E18 /* InputInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACD21EECF7700413E18 /* InputInstruction.swift */; };
 		6F716AD021EED17F00413E18 /* SingleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */; };
-		6F716AD221EED8F400413E18 /* OutputInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716AD121EED8F400413E18 /* OutputInstruction.swift */; };
+		6F74282D22436D1400C6E3F6 /* ShapeForEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */; };
 		6F76AC1C21905A4A000E65AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F76AC1B21905A4A000E65AB /* AppDelegate.swift */; };
-		6F76AC2121905A4A000E65AB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F76AC1F21905A4A000E65AB /* Main.storyboard */; };
 		6F76AC2321905A4C000E65AB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6F76AC2221905A4C000E65AB /* Assets.xcassets */; };
 		6F76AC2621905A4C000E65AB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6F76AC2421905A4C000E65AB /* LaunchScreen.storyboard */; };
 		6F81F7412227D37400EA6918 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F81F7402227D37400EA6918 /* Extensions.swift */; };
@@ -33,34 +32,38 @@
 		6F9FD990221D030C00A2B4CA /* Program.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD98F221D030C00A2B4CA /* Program.swift */; };
 		6F9FD992221D102E00A2B4CA /* DataBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F9FD991221D102E00A2B4CA /* DataBase.swift */; };
 		6FA0DD432223D0760017A76B /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA0DD422223D0760017A76B /* Block.swift */; };
+		6FA795B82238CEE400BB9F96 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6FA795B72238CEE400BB9F96 /* Main.storyboard */; };
+		6FA795BA2238E4C900BB9F96 /* CanvasController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA795B92238E4C900BB9F96 /* CanvasController.swift */; };
+		6FA795BC2238E58900BB9F96 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA795BB2238E58900BB9F96 /* Canvas.swift */; };
 		6FB0410B222691F600733C2B /* BottomBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB0410A222691F600733C2B /* BottomBar.swift */; };
 		6FB68BD021C391ED00A68969 /* Rect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB68BCF21C391ED00A68969 /* Rect.swift */; };
 		6FB68BD221C3F1F900A68969 /* Oval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB68BD121C3F1F900A68969 /* Oval.swift */; };
 		6FB68BD421C3F20900A68969 /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB68BD321C3F20900A68969 /* Diamond.swift */; };
 		6FC957C321E5CC1E00584DB2 /* TrippleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */; };
 		6FCC492121E86C5200081596 /* InstructionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCC492021E86C5200081596 /* InstructionCell.swift */; };
-		6FD4DF1F21C486B500133C72 /* Canvas.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF1E21C486B500133C72 /* Canvas.swift */; };
+		6FD4DF1F21C486B500133C72 /* Canv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF1E21C486B500133C72 /* Canv.swift */; };
 		6FD4DF2121C488C400133C72 /* DrawingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF2021C488C400133C72 /* DrawingController.swift */; };
 		6FD4DF2321C49A1F00133C72 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF2221C49A1F00133C72 /* Shape.swift */; };
+		6FEBA284224E05B300FB496E /* EntranceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA283224E05B300FB496E /* EntranceView.swift */; };
+		6FEBA286224E140000FB496E /* Customized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA285224E140000FB496E /* Customized.swift */; };
 		6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		6F1D623721DDFEC6000399C1 /* CollectionViewCellWithLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellWithLabel.swift; sourceTree = "<group>"; };
-		6F283A2221C5E7E700E4BF98 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
-		6F33F35521F01E5C00B5ADD2 /* Entrance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entrance.swift; sourceTree = "<group>"; };
+		6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineForConnecting.swift; sourceTree = "<group>"; };
+		6F33F35521F01E5C00B5ADD2 /* Entrans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entrans.swift; sourceTree = "<group>"; };
 		6F4D6288221C219200731463 /* InputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCell.swift; sourceTree = "<group>"; };
 		6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTableViewController.swift; sourceTree = "<group>"; };
 		6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTextFieldCell.swift; sourceTree = "<group>"; };
+		6F54463E224C7C9300C83BAE /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
+		6F5F87DB224DC220009A679A /* EntrancePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntrancePath.swift; sourceTree = "<group>"; };
+		6F5F87DD224DCEB8009A679A /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		6F629C87222931C7001D9DA1 /* ShapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
-		6F716AC721EECC8600413E18 /* PrintInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintInstruction.swift; sourceTree = "<group>"; };
-		6F716ACB21EECEAD00413E18 /* InOutInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InOutInstruction.swift; sourceTree = "<group>"; };
-		6F716ACD21EECF7700413E18 /* InputInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputInstruction.swift; sourceTree = "<group>"; };
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
-		6F716AD121EED8F400413E18 /* OutputInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OutputInstruction.swift; sourceTree = "<group>"; };
+		6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeForEditing.swift; sourceTree = "<group>"; };
 		6F76AC1821905A4A000E65AB /* Drawing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drawing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F76AC1B21905A4A000E65AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		6F76AC2021905A4A000E65AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6F76AC2221905A4C000E65AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F76AC2521905A4C000E65AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6F76AC2721905A4C000E65AB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -74,15 +77,20 @@
 		6F9FD98F221D030C00A2B4CA /* Program.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Program.swift; sourceTree = "<group>"; };
 		6F9FD991221D102E00A2B4CA /* DataBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataBase.swift; sourceTree = "<group>"; };
 		6FA0DD422223D0760017A76B /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
+		6FA795B72238CEE400BB9F96 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		6FA795B92238E4C900BB9F96 /* CanvasController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasController.swift; sourceTree = "<group>"; };
+		6FA795BB2238E58900BB9F96 /* Canvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
 		6FB0410A222691F600733C2B /* BottomBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BottomBar.swift; sourceTree = "<group>"; };
 		6FB68BCF21C391ED00A68969 /* Rect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rect.swift; sourceTree = "<group>"; };
 		6FB68BD121C3F1F900A68969 /* Oval.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Oval.swift; sourceTree = "<group>"; };
 		6FB68BD321C3F20900A68969 /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
 		6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrippleTextFieldCell.swift; sourceTree = "<group>"; };
 		6FCC492021E86C5200081596 /* InstructionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCell.swift; sourceTree = "<group>"; };
-		6FD4DF1E21C486B500133C72 /* Canvas.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Canvas.swift; sourceTree = "<group>"; };
+		6FD4DF1E21C486B500133C72 /* Canv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Canv.swift; sourceTree = "<group>"; };
 		6FD4DF2021C488C400133C72 /* DrawingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
 		6FD4DF2221C49A1F00133C72 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
+		6FEBA283224E05B300FB496E /* EntranceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceView.swift; sourceTree = "<group>"; };
+		6FEBA285224E140000FB496E /* Customized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Customized.swift; sourceTree = "<group>"; };
 		6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -104,19 +112,12 @@
 				6FB68BD121C3F1F900A68969 /* Oval.swift */,
 				6FB68BCF21C391ED00A68969 /* Rect.swift */,
 				6FD4DF2221C49A1F00133C72 /* Shape.swift */,
-				6F33F35521F01E5C00B5ADD2 /* Entrance.swift */,
+				6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */,
+				6F54463E224C7C9300C83BAE /* SourceView.swift */,
+				6FEBA285224E140000FB496E /* Customized.swift */,
+				6FEBA283224E05B300FB496E /* EntranceView.swift */,
 			);
 			path = Shape;
-			sourceTree = "<group>";
-		};
-		6F716AC621EECC5900413E18 /* InOutInstruction */ = {
-			isa = PBXGroup;
-			children = (
-				6F716ACB21EECEAD00413E18 /* InOutInstruction.swift */,
-				6F716ACD21EECF7700413E18 /* InputInstruction.swift */,
-				6F716AD121EED8F400413E18 /* OutputInstruction.swift */,
-			);
-			path = InOutInstruction;
 			sourceTree = "<group>";
 		};
 		6F716ACA21EECCB600413E18 /* Instruction */ = {
@@ -125,8 +126,6 @@
 				6F8ACEAD21E390920081ED96 /* Instruction.swift */,
 				6F8ACEAB21E390910081ED96 /* AssignmentInstruction.swift */,
 				6F8ACEAF21E390920081ED96 /* IfInstruction.swift */,
-				6F716AC721EECC8600413E18 /* PrintInstruction.swift */,
-				6F716AC621EECC5900413E18 /* InOutInstruction */,
 				6F81F7422227DB4B00EA6918 /* InteractionInstruction.swift */,
 			);
 			path = Instruction;
@@ -155,7 +154,7 @@
 				6F8ACEA921E3906C0081ED96 /* Models */,
 				6FB68BCE21C391B700A68969 /* Views */,
 				6F76AC1B21905A4A000E65AB /* AppDelegate.swift */,
-				6F76AC1F21905A4A000E65AB /* Main.storyboard */,
+				6FA795B72238CEE400BB9F96 /* Main.storyboard */,
 				6F76AC2221905A4C000E65AB /* Assets.xcassets */,
 				6F76AC2421905A4C000E65AB /* LaunchScreen.storyboard */,
 				6F76AC2721905A4C000E65AB /* Info.plist */,
@@ -179,6 +178,7 @@
 		6F8ACEB821E390B60081ED96 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				6FA795B92238E4C900BB9F96 /* CanvasController.swift */,
 				6FD4DF2021C488C400133C72 /* DrawingController.swift */,
 				6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */,
 				6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */,
@@ -190,12 +190,13 @@
 		6FB68BCE21C391B700A68969 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				6FEBA282224DF3BB00FB496E /* Line */,
 				6F5CBE8C21EF0E52005F4E3E /* Shape */,
 				6FC957C121E5CB8C00584DB2 /* Cells */,
-				6F283A2221C5E7E700E4BF98 /* Line.swift */,
-				6FD4DF1E21C486B500133C72 /* Canvas.swift */,
+				6FD4DF1E21C486B500133C72 /* Canv.swift */,
 				6FB0410A222691F600733C2B /* BottomBar.swift */,
 				6F629C87222931C7001D9DA1 /* ShapeView.swift */,
+				6FA795BB2238E58900BB9F96 /* Canvas.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -211,6 +212,17 @@
 				6F4D6288221C219200731463 /* InputCell.swift */,
 			);
 			path = Cells;
+			sourceTree = "<group>";
+		};
+		6FEBA282224DF3BB00FB496E /* Line */ = {
+			isa = PBXGroup;
+			children = (
+				6F5F87DD224DCEB8009A679A /* Line.swift */,
+				6F5F87DB224DC220009A679A /* EntrancePath.swift */,
+				6F33F35521F01E5C00B5ADD2 /* Entrans.swift */,
+				6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */,
+			);
+			path = Line;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -271,9 +283,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6FA795B82238CEE400BB9F96 /* Main.storyboard in Resources */,
 				6F76AC2621905A4C000E65AB /* LaunchScreen.storyboard in Resources */,
 				6F76AC2321905A4C000E65AB /* Assets.xcassets in Resources */,
-				6F76AC2121905A4A000E65AB /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -284,53 +296,49 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F716AC821EECC8600413E18 /* PrintInstruction.swift in Sources */,
-				6F716ACC21EECEAD00413E18 /* InOutInstruction.swift in Sources */,
 				6F9FD992221D102E00A2B4CA /* DataBase.swift in Sources */,
-				6F716AD221EED8F400413E18 /* OutputInstruction.swift in Sources */,
 				6FCC492121E86C5200081596 /* InstructionCell.swift in Sources */,
-				6FD4DF1F21C486B500133C72 /* Canvas.swift in Sources */,
+				6FD4DF1F21C486B500133C72 /* Canv.swift in Sources */,
+				6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */,
 				6F9D67612224335400560E83 /* ProgramController.swift in Sources */,
 				6F9FD990221D030C00A2B4CA /* Program.swift in Sources */,
 				6FB68BD421C3F20900A68969 /* Diamond.swift in Sources */,
 				6FD4DF2121C488C400133C72 /* DrawingController.swift in Sources */,
-				6F33F35621F01E5C00B5ADD2 /* Entrance.swift in Sources */,
+				6F33F35621F01E5C00B5ADD2 /* Entrans.swift in Sources */,
 				6FC957C321E5CC1E00584DB2 /* TrippleTextFieldCell.swift in Sources */,
 				6FD4DF2321C49A1F00133C72 /* Shape.swift in Sources */,
+				6FA795BA2238E4C900BB9F96 /* CanvasController.swift in Sources */,
 				6F8ACEB621E390920081ED96 /* IfInstruction.swift in Sources */,
 				6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */,
+				6FEBA284224E05B300FB496E /* EntranceView.swift in Sources */,
 				6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */,
+				6FA795BC2238E58900BB9F96 /* Canvas.swift in Sources */,
 				6F8ACEB221E390920081ED96 /* AssignmentInstruction.swift in Sources */,
 				6F716AD021EED17F00413E18 /* SingleTextFieldCell.swift in Sources */,
-				6F716ACE21EECF7700413E18 /* InputInstruction.swift in Sources */,
 				6F81F7412227D37400EA6918 /* Extensions.swift in Sources */,
+				6FEBA286224E140000FB496E /* Customized.swift in Sources */,
+				6F5F87DE224DCEB8009A679A /* Line.swift in Sources */,
 				6F4D6289221C219200731463 /* InputCell.swift in Sources */,
 				6FB68BD221C3F1F900A68969 /* Oval.swift in Sources */,
 				6F86FFA2222539530009F84B /* LinearFunction.swift in Sources */,
 				6F76AC1C21905A4A000E65AB /* AppDelegate.swift in Sources */,
 				6F8ACEB421E390920081ED96 /* Instruction.swift in Sources */,
 				6F81F7432227DB4B00EA6918 /* InteractionInstruction.swift in Sources */,
+				6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */,
 				6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */,
 				6F629C88222931C7001D9DA1 /* ShapeView.swift in Sources */,
 				6FB68BD021C391ED00A68969 /* Rect.swift in Sources */,
 				6FB0410B222691F600733C2B /* BottomBar.swift in Sources */,
 				6FA0DD432223D0760017A76B /* Block.swift in Sources */,
 				6F1D623821DDFEC6000399C1 /* CollectionViewCellWithLabel.swift in Sources */,
-				6F283A2321C5E7E700E4BF98 /* Line.swift in Sources */,
+				6F283A2321C5E7E700E4BF98 /* LineForConnecting.swift in Sources */,
+				6F74282D22436D1400C6E3F6 /* ShapeForEditing.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		6F76AC1F21905A4A000E65AB /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6F76AC2021905A4A000E65AB /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6F76AC2421905A4C000E65AB /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

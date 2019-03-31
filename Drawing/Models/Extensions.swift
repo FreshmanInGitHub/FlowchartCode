@@ -48,6 +48,9 @@ extension CGPoint {
     static func * (left: CGFloat, right: CGPoint) -> CGPoint {
         return CGPoint(x: right.x*left, y: right.y*left)
     }
+    static prefix func - (right: CGPoint) -> CGPoint {
+        return CGPoint(x: -right.x, y: -right.y)
+    }
 }
 
 extension CGAffineTransform {
@@ -61,9 +64,6 @@ extension CGAffineTransform {
 }
 
 extension UIView {
-    var centerInSuperview: CGPoint? {
-        return superview == nil ? nil : CGPoint(x: frame.midX, y: frame.midY)
-    }
     
     func positionInSuperview(point: CGPoint) -> CGPoint {
         return CGPoint(x: point.x+frame.minX, y: point.y+frame.minY)
@@ -79,7 +79,30 @@ extension UIView {
     @objc func scale(by scale: CGFloat) {
         frame = frame.applying(CGAffineTransform(scale: scale))
     }
+    
+    func shiver() {
+        UIView.animate(withDuration: 0.05, animations: {self.translate(with: CGPoint(x: -2, y: -2))}, completion: {_ in
+            UIView.animate(withDuration: 0.05, animations: {self.translate(with: CGPoint(x: 4, y: 4))}, completion: {_ in
+                UIView.animate(withDuration: 0.05, animations: {self.translate(with: CGPoint(x: -4, y: -4))}, completion: {_ in
+                    UIView.animate(withDuration: 0.05, animations: {self.translate(with: CGPoint(x: 4, y: 4))}, completion: {_ in
+                        UIView.animate(withDuration: 0.05, animations: {self.translate(with: CGPoint(x: -2, y: -2))})
+                    })
+                })
+            })
+        })
+    }
 }
+
+extension UIBezierPath {
+    @objc func translate(with translation: CGPoint) {
+        apply(CGAffineTransform(translation: translation))
+    }
+    
+    @objc func scale(by scale: CGFloat) {
+        apply(CGAffineTransform(scale: scale))
+    }
+}
+
 
 extension String {
     var isDouble: Bool {
@@ -100,6 +123,24 @@ extension NSCoder {
             return value
         }
         return nil
+    }
+}
+
+extension CGSize {
+    static func + (left: CGSize, right: CGSize) -> CGSize {
+        return CGSize(width: left.width + right.width, height: left.height + right.height)
+    }
+    static func - (left: CGSize, right: CGSize) -> CGSize {
+        return CGSize(width: left.width - right.width, height: left.height - right.height)
+    }
+    static func * (left: CGFloat, right: CGSize) -> CGSize {
+        return CGSize(width: left * right.width, height: left * right.height)
+    }
+    static func * (left: CGSize, right: CGFloat) -> CGSize {
+        return CGSize(width: left.width * right, height: left.height * right)
+    }
+    static func / (left: CGSize, right: CGFloat) -> CGSize {
+        return CGSize(width: left.width / right, height: left.height / right)
     }
 }
 

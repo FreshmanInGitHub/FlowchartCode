@@ -28,6 +28,10 @@ class InteractionInstruction: Instruction {
         return true
     }
     
+    override init() {
+        super.init()
+    }
+    
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(content, forKey: "content")
@@ -37,10 +41,10 @@ class InteractionInstruction: Instruction {
     required init(coder aDecoder: NSCoder) {
         super.init()
         content = aDecoder.decodeString(forKey: "content")!
-        type = InteractionType(rawValue: aDecoder.decodeInteger(forKey: "type"))!
+        type = InteractionType(rawValue: aDecoder.decodeString(forKey: "type") ?? "print")!
     }
     
-    enum InteractionType: Int {
+    enum InteractionType: String {
         case print
         case input
         case output

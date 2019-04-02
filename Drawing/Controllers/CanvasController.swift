@@ -207,7 +207,9 @@ class CanvasController: UIViewController {
     @IBAction func dragEntrance(_ sender: UILongPressGestureRecognizer) {
         let position = sender.location(in: canvas)
         switch sender.state {
-        case .began: entrance.isHighlighted = true
+        case .began:
+            entrance.isHighlighted = true
+            UIView.animate(withDuration: 0.25, animations: {self.entrance.set(point: position, shape: self.canvas.shape(at: position))})
         case .changed:
             entrance.set(point: position, shape: canvas.shape(at: position))
         default:

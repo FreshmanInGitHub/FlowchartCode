@@ -66,9 +66,6 @@ class Canvas: UIView {
                 otherShape.setLine()
             }
         }
-        if shape == entrance.shape {
-            entrance.
-        }
         setLines()
     }
     
@@ -114,14 +111,22 @@ class Canvas: UIView {
         updateSizes()
     }
     
+    override func bringSubviewToFront(_ view: UIView) {
+        super.bringSubviewToFront(view)
+        if view != entrance {
+            bringSubviewToFront(entrance)
+        }
+    }
+    
     func updateSizes() {
-        frame.size = (scrollView.frame.size/2 + minSize) * scrollView.zoomScale
-        scrollView.contentSize = frame.size
-        scrollView.minimumZoomScale = max(max(scrollView.frame.width/frame.width, scrollView.frame.height/frame.height), 0.3)
+        let sizeForUpdate = (scrollView.frame.size/2 + minSize) * scrollView.zoomScale
+        frame.size = CGSize(width: max(frame.size.width, sizeForUpdate.width), height: max(frame.size.height, sizeForUpdate.height))
     }
     
     override var frame: CGRect {
         didSet {
+            scrollView.contentSize = frame.size
+            scrollView.minimumZoomScale = max(max(scrollView.frame.width/frame.width, scrollView.frame.height/frame.height), 0.3)
             setNeedsDisplay()
         }
     }

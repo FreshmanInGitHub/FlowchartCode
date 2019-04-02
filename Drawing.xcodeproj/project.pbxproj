@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		6F1D623821DDFEC6000399C1 /* CollectionViewCellWithLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F1D623721DDFEC6000399C1 /* CollectionViewCellWithLabel.swift */; };
 		6F283A2321C5E7E700E4BF98 /* LineForConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */; };
-		6F33F35621F01E5C00B5ADD2 /* Entrans.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F33F35521F01E5C00B5ADD2 /* Entrans.swift */; };
 		6F4D6289221C219200731463 /* InputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D6288221C219200731463 /* InputCell.swift */; };
 		6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */; };
 		6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */; };
@@ -41,8 +40,6 @@
 		6FB68BD421C3F20900A68969 /* Diamond.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FB68BD321C3F20900A68969 /* Diamond.swift */; };
 		6FC957C321E5CC1E00584DB2 /* TrippleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */; };
 		6FCC492121E86C5200081596 /* InstructionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCC492021E86C5200081596 /* InstructionCell.swift */; };
-		6FD4DF1F21C486B500133C72 /* Canv.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF1E21C486B500133C72 /* Canv.swift */; };
-		6FD4DF2121C488C400133C72 /* DrawingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF2021C488C400133C72 /* DrawingController.swift */; };
 		6FD4DF2321C49A1F00133C72 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF2221C49A1F00133C72 /* Shape.swift */; };
 		6FEBA284224E05B300FB496E /* EntranceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA283224E05B300FB496E /* EntranceView.swift */; };
 		6FEBA286224E140000FB496E /* Customized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA285224E140000FB496E /* Customized.swift */; };
@@ -52,7 +49,6 @@
 /* Begin PBXFileReference section */
 		6F1D623721DDFEC6000399C1 /* CollectionViewCellWithLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellWithLabel.swift; sourceTree = "<group>"; };
 		6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineForConnecting.swift; sourceTree = "<group>"; };
-		6F33F35521F01E5C00B5ADD2 /* Entrans.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Entrans.swift; sourceTree = "<group>"; };
 		6F4D6288221C219200731463 /* InputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCell.swift; sourceTree = "<group>"; };
 		6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTableViewController.swift; sourceTree = "<group>"; };
 		6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTextFieldCell.swift; sourceTree = "<group>"; };
@@ -86,8 +82,6 @@
 		6FB68BD321C3F20900A68969 /* Diamond.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Diamond.swift; sourceTree = "<group>"; };
 		6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrippleTextFieldCell.swift; sourceTree = "<group>"; };
 		6FCC492021E86C5200081596 /* InstructionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCell.swift; sourceTree = "<group>"; };
-		6FD4DF1E21C486B500133C72 /* Canv.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Canv.swift; sourceTree = "<group>"; };
-		6FD4DF2021C488C400133C72 /* DrawingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingController.swift; sourceTree = "<group>"; };
 		6FD4DF2221C49A1F00133C72 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
 		6FEBA283224E05B300FB496E /* EntranceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceView.swift; sourceTree = "<group>"; };
 		6FEBA285224E140000FB496E /* Customized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Customized.swift; sourceTree = "<group>"; };
@@ -179,7 +173,6 @@
 			isa = PBXGroup;
 			children = (
 				6FA795B92238E4C900BB9F96 /* CanvasController.swift */,
-				6FD4DF2021C488C400133C72 /* DrawingController.swift */,
 				6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */,
 				6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */,
 				6F9D67602224335400560E83 /* ProgramController.swift */,
@@ -193,7 +186,6 @@
 				6FEBA282224DF3BB00FB496E /* Line */,
 				6F5CBE8C21EF0E52005F4E3E /* Shape */,
 				6FC957C121E5CB8C00584DB2 /* Cells */,
-				6FD4DF1E21C486B500133C72 /* Canv.swift */,
 				6FB0410A222691F600733C2B /* BottomBar.swift */,
 				6F629C87222931C7001D9DA1 /* ShapeView.swift */,
 				6FA795BB2238E58900BB9F96 /* Canvas.swift */,
@@ -219,7 +211,6 @@
 			children = (
 				6F5F87DD224DCEB8009A679A /* Line.swift */,
 				6F5F87DB224DC220009A679A /* EntrancePath.swift */,
-				6F33F35521F01E5C00B5ADD2 /* Entrans.swift */,
 				6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */,
 			);
 			path = Line;
@@ -257,6 +248,7 @@
 				TargetAttributes = {
 					6F76AC1721905A4A000E65AB = {
 						CreatedOnToolsVersion = 10.0;
+						LastSwiftMigration = 1020;
 					};
 				};
 			};
@@ -298,13 +290,10 @@
 			files = (
 				6F9FD992221D102E00A2B4CA /* DataBase.swift in Sources */,
 				6FCC492121E86C5200081596 /* InstructionCell.swift in Sources */,
-				6FD4DF1F21C486B500133C72 /* Canv.swift in Sources */,
 				6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */,
 				6F9D67612224335400560E83 /* ProgramController.swift in Sources */,
 				6F9FD990221D030C00A2B4CA /* Program.swift in Sources */,
 				6FB68BD421C3F20900A68969 /* Diamond.swift in Sources */,
-				6FD4DF2121C488C400133C72 /* DrawingController.swift in Sources */,
-				6F33F35621F01E5C00B5ADD2 /* Entrans.swift in Sources */,
 				6FC957C321E5CC1E00584DB2 /* TrippleTextFieldCell.swift in Sources */,
 				6FD4DF2321C49A1F00133C72 /* Shape.swift in Sources */,
 				6FA795BA2238E4C900BB9F96 /* CanvasController.swift in Sources */,
@@ -480,7 +469,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Young.Drawing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -499,7 +488,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = Young.Drawing;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

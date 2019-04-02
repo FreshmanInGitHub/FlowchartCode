@@ -33,8 +33,8 @@ class ProgramController: UITableViewController, UITextFieldDelegate {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if let controller = segue.destination as? DrawingController {
-            controller.program = program
+        if let controller = segue.destination as? CanvasController {
+            //controller.program = program
         } else if let controller = segue.destination as? ExecutionController {
             controller.program = program
         }

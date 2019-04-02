@@ -25,7 +25,7 @@ class Program: NSObject, NSCoding {
     override init() {
     }
     
-    func set(scale: CGFloat, shapes: [Shape], entrance: Entrans) {
+    func set(scale: CGFloat, shapes: [Shape], entrance: EntranceView) {
         self.scale = scale
         blocks = [Block]()
         for shape in shapes {
@@ -40,7 +40,7 @@ class Program: NSObject, NSCoding {
             }
         }
         if let shape = entrance.shape {
-            self.entrance = (shapes.firstIndex(of: shape)!, entrance.angle)
+            self.entrance = (shapes.firstIndex(of: shape)!, entrance.path.angle)
         } else {
             self.entrance = nil
         }

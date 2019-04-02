@@ -249,16 +249,15 @@ extension CanvasController: UIScrollViewDelegate {
     func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         return canvas
     }
-    
-    func scrollViewDidZoom(_ scrollView: UIScrollView) {
-        
-    }
 }
 
 extension CanvasController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        if let view = gestureRecognizer.view as? Customized {
-            return view.contains(gestureRecognizer.location(in: gestureRecognizer.view))
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive press: UIPress) -> Bool {
+        if let view = gestureRecognizer.view as? Customized, view.contains(gestureRecognizer.location(in: gestureRecognizer.view)) {
+            if view is EntranceView, let shape = entrance.shape, shape.contains(gestureRecognizer.location(in: shape)) {
+                return false
+            }
+            return true
         }
         return false
     }

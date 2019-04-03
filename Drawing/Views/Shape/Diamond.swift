@@ -30,21 +30,27 @@ class Diamond: Shape {
     
     var nextShapeWhenFalse: Shape? {
         didSet {
-            setLine()
+            resetLine(true)
         }
     }
     
-    override func setLine() {
-        super.setLine()
-        if let line = line {
-            line.color = UIColor.green
+    override func resetLine(_ shouldResetLine: Bool) {
+        super.resetLine(shouldResetLine)
+        if shouldResetLine {
+            if let line = line {
+                line.color = UIColor.green
+            }
+            lineWhenFalse = nextShapeWhenFalse == nil ? nil : LineForConnecting(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
         }
-        lineWhenFalse = nextShapeWhenFalse == nil ? nil : LineForConnecting(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
     }
     
-    var lineWhenFalse: LineForConnecting?
+    var lineWhenFalse: LineForConnecting? {
+        didSet {
+            NotificationCenter.default.post(Notification(name: .init("redrawCanvas")))
+        }
+    }
     
-    override func related(to shape: Shape) -> Bool {
+    override func related(to shape: Shape?) -> Bool {
         return super.related(to: shape) || nextShapeWhenFalse == shape
     }
     
@@ -58,7 +64,7 @@ class Diamond: Shape {
     
     override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {
         if positionInShapeView != center {
-            let line = LinearFunction(start: center, end: positionInShapeView)!
+            let line = LinearFunction(start: center, end: positionInShapeView) ?? LinearFunction(start: center, end: center+CGPoint(x: 1, y: 0))!
             let lineOfFrame: LinearFunction
             switch (positionInShapeView.x>center.x, positionInShapeView.y>center.y) {
             case (true, true): lineOfFrame = LinearFunction(start: frame.rightCenter, end: frame.bottomCenter)!

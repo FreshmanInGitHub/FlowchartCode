@@ -22,55 +22,8 @@ class Canvas: UIView {
         return shapes
     }
     
-    var lines = [LineForConnecting]()
-    var draggingLine: LineForConnecting? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
-    
-    func tryDraggingLine(at point: CGPoint) -> Bool {
-        for line in lines.reversed() {
-            if line.contains(point) {
-                draggingLine = line.new(point: point)
-                lines.remove(at: lines.firstIndex(of: line)!)
-                return true
-            }
-        }
-        return false
-    }
-    
-    func tryMovingLine(to point: CGPoint) -> Bool {
-        if let line = draggingLine {
-            draggingLine = line.new(point: point)
-            return true
-        }
-        return false
-    }
-    
-    func tryDroppingLine(at position: CGPoint) -> Bool {
-        if let line = draggingLine {
-            draggingLine = nil
-            if let shape = shape(at: position), line.initiator.canConnect(to: shape) {
-                line.initiator.connect(to: shape, with: line.color)
-                setLines()
-                return true
-            }
-        }
-        return false
-    }
-    
-    func resetLines(relatedTo shape: Shape) {
-        for otherShape in shapes {
-            if otherShape.related(to: shape) {
-                otherShape.setLine()
-            }
-        }
-        setLines()
-    }
-    
-    func setLines() {
-        lines.removeAll()
+    var lines: [LineForConnecting] {
+        var lines = [LineForConnecting]()
         for shape in shapes {
             if let line = shape.line {
                 lines.append(line)
@@ -79,7 +32,13 @@ class Canvas: UIView {
                 lines.append(line)
             }
         }
-        setNeedsDisplay()
+        return lines
+    }
+    
+    var draggingLine: LineForConnecting? {
+        didSet {
+            setNeedsDisplay()
+        }
     }
     
     override func draw(_ rect: CGRect) {
@@ -94,6 +53,12 @@ class Canvas: UIView {
             line.stroke()
             line.fill()
         }
+        if entrance.isHighlighted {
+            UIColor.lightGray.set()
+        } else {
+            UIColor.gray.set()
+        }
+        entrancePath.stroke()
     }
     
     override func didMoveToSuperview() {
@@ -103,19 +68,18 @@ class Canvas: UIView {
             backgroundColor = .clear
             updateSizes()
         }
-        addSubview(entrance)
     }
     
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
+        print(subview.frame.origin)
         updateSizes()
+        setNeedsDisplay()
     }
     
     override func bringSubviewToFront(_ view: UIView) {
         super.bringSubviewToFront(view)
-        if view != entrance {
-            bringSubviewToFront(entrance)
-        }
+        setNeedsDisplay()
     }
     
     func updateSizes() {
@@ -130,12 +94,9 @@ class Canvas: UIView {
             setNeedsDisplay()
         }
     }
-
+    
     private var minSize: CGSize {
-        var corner = CGPoint()
-        if subviews.contains(entrance) {
-            corner = entrance.positionInSuperview(point: entrance.path.bounds.bottomRight)
-        }
+        var corner = entrancePath.bounds.bottomRight
         for shape in shapes {
             corner.x = max(shape.frame.maxX, corner.x)
             corner.y = max(shape.frame.maxY, corner.y)
@@ -143,15 +104,16 @@ class Canvas: UIView {
         return CGSize(width: max(corner.x, scrollView.frame.width/2), height: max(corner.y, scrollView.frame.height/2))
     }
     
-    var entrance = EntranceView(frame: CGRect(x: 20, y: 0, width: 80, height: 80))
-    
-    func shape(at point: CGPoint) -> Shape? {
-        for shape in shapes {
-            if shape.contains(shape.positionInView(point: point)) {
-                return shape
+    var entrancePath = EntrancePath(point: CGPoint(x: 40, y: 30), shape: nil)
+    var entrance: (point: CGPoint, shape: Shape?, isHighlighted: Bool) = (CGPoint(x: 40, y: 30), nil, false) {
+        didSet {
+            if entrance.shape == nil && oldValue.shape == nil {
+                entrancePath.translate(with: entrance.point-oldValue.point)
+            } else {
+                entrancePath = EntrancePath(point: entrance.point, shape: entrance.shape)
             }
+            setNeedsDisplay()
         }
-        return nil
     }
     
 }

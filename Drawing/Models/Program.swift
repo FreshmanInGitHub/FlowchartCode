@@ -24,27 +24,27 @@ class Program: NSObject, NSCoding {
     
     override init() {
     }
-    
-    func set(scale: CGFloat, shapes: [Shape], entrance: EntranceView) {
-        self.scale = scale
-        blocks = [Block]()
-        for shape in shapes {
-            blocks.append(Block(shape: shape))
-        }
-        for index in shapes.indices {
-            if let next = shapes[index].nextShape {
-                blocks[index].next = shapes.firstIndex(of: next)!
-            }
-            if let diamond = shapes[index] as? Diamond, let nextWhenFalse = diamond.nextShapeWhenFalse {
-                blocks[index].nextWhenFalse = shapes.firstIndex(of: nextWhenFalse)!
-            }
-        }
-        if let shape = entrance.shape {
-            self.entrance = (shapes.firstIndex(of: shape)!, entrance.path.angle)
-        } else {
-            self.entrance = nil
-        }
-    }
+//    
+//    func set(scale: CGFloat, shapes: [Shape], entrance: EntranceView) {
+//        self.scale = scale
+//        blocks = [Block]()
+//        for shape in shapes {
+//            blocks.append(Block(shape: shape))
+//        }
+//        for index in shapes.indices {
+//            if let next = shapes[index].nextShape {
+//                blocks[index].next = shapes.firstIndex(of: next)!
+//            }
+//            if let diamond = shapes[index] as? Diamond, let nextWhenFalse = diamond.nextShapeWhenFalse {
+//                blocks[index].nextWhenFalse = shapes.firstIndex(of: nextWhenFalse)!
+//            }
+//        }
+//        if let shape = entrance.shape {
+//            self.entrance = (shapes.firstIndex(of: shape)!, entrance.path.angle)
+//        } else {
+//            self.entrance = nil
+//        }
+//    }
     
     required init?(coder aDecoder: NSCoder) {
         title = aDecoder.decodeString(forKey: "title")!

@@ -28,13 +28,13 @@ class Oval: Shape {
         return Oval.path(within: bounds)
     }
     
-    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint? {
+    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {
         if positionInShapeView != center {
             let squareA = (frame.minX-center.x).square
             let squareB = (frame.minY-center.y).square
             let targetInView = positionInShapeView - center
             let squareX = targetInView.x.square
-            let line = LinearFunction(start: targetInView, end: CGPoint())!
+            let line = LinearFunction(start: targetInView, end: CGPoint()) ?? LinearFunction(k: 0, b: 0)
             if line.b == 0 {
                 let dY = sqrt(squareB*(1-squareX/squareA))
                 return targetInView.y>0 ? CGPoint(x: targetInView.x+center.x, y: dY+center.y):CGPoint(x: targetInView.x+center.x, y: center.y-dY)

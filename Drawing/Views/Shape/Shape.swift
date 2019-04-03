@@ -16,7 +16,7 @@ class Shape: UIView, Customized {
     
     override var frame: CGRect {
         didSet {
-            canvas?.resetLines(relatedTo: self)
+            NotificationCenter.default.post(Notification(name: .init("updateLinesForShape"), object: self, userInfo: nil))
         }
     }
     
@@ -31,12 +31,8 @@ class Shape: UIView, Customized {
     
     var nextShape: Shape? {
         didSet {
-            canvas?.resetLines(relatedTo: self)
+            resetLine(true)
         }
-    }
-    
-    var canvas: Canvas? {
-        return superview as? Canvas
     }
     
     var instructions = [Instruction]() {
@@ -78,21 +74,30 @@ class Shape: UIView, Customized {
         return path.contains(positionInView(point: positionInShapeView)) ? nil : extendedEntry(for: positionInShapeView)
     }
     
-    func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint? {
-        return nil
+    func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {
+        return CGPoint()
     }
     
-    var line: LineForConnecting?
+    var line: LineForConnecting? {
+        didSet {
+            NotificationCenter.default.post(Notification(name: .init("redrawCanvas")))
+        }
+    }
     
-    func setLine() {
-        line = nextShape == nil ? nil : LineForConnecting(initiator: self, target: nextShape!, color: UIColor.black)
+    func resetLine(_ shouldResetLine: Bool) {
+        if shouldResetLine {
+            line = nextShape == nil ? nil : LineForConnecting(initiator: self, target: nextShape!, color: UIColor.black)
+        }
     }
     
     func lineForPanning(to point: CGPoint) -> LineForConnecting? {
         return nextShape == nil ? LineForConnecting(initiator: self, point: point, color: .black) : nil
     }
     
-    func related(to shape: Shape) -> Bool {
+    func related(to shape: Shape?) -> Bool {
+        if shape == nil {
+            return true
+        }
         return self == shape || nextShape == shape
     }
     
@@ -111,25 +116,6 @@ class Shape: UIView, Customized {
         else { UIColor.black.setStroke() }
         path.fill()
         path.stroke()
-    }
-    
-    
-    func keepInFrame() {
-        let origin = frame.origin
-        switch (origin.x < 0, origin.y < 0) {
-        case (true, true): slide(with: -origin)
-        case (true, false): slide(with: CGPoint(x: -origin.x, y: 0))
-        case (false, true): slide(with: CGPoint(x: 0, y: -origin.y))
-        default: break
-        }
-    }
-    
-    private func slide(with translation: CGPoint) {
-        UIView.animate(withDuration: 0.4, animations: {self.translate(with: translation)}, completion: {_ in
-            if let canvas = self.superview as? Canvas {
-                canvas.resetLines(relatedTo: self)
-            }
-        })
     }
     
 }

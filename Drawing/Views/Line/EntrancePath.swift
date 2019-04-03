@@ -10,20 +10,33 @@ import UIKit
 
 class EntrancePath: Line {
     
-    override var end: CGPoint { return CGPoint(x: 40, y: 40) }
+    override var end: CGPoint { return endValue }
     
     override var start: CGPoint { return currentPoint }
     
-    init(angle: CGFloat) {
+    var endValue = CGPoint()
+    
+    init(point: CGPoint, shape: Shape?) {
         super.init()
         move(to: CGPoint(x: -10, y: 7.5))
         addLine(to: CGPoint())
         addLine(to: CGPoint(x: -10, y: -7.5))
         move(to: CGPoint())
         addLine(to: CGPoint(x: -40, y: 0))
-        apply(CGAffineTransform(rotationAngle: angle))
-        apply(CGAffineTransform(translation: end))
+        if let shape = shape {
+            apply(CGAffineTransform(rotationAngle: Line.angle(between: point, and: shape.center)))
+            apply(CGAffineTransform(translation: shape.extendedEntry(for: point)))
+            endValue = endValue+shape.extendedEntry(for: point)
+        } else {
+            apply(CGAffineTransform(translation: point+CGPoint(x: 20, y: 0)))
+            endValue = endValue+point+CGPoint(x: 20, y: 0)
+        }
         lineWidth = 2
+    }
+    
+    override func translate(with translation: CGPoint) {
+        super.translate(with: translation)
+        endValue = endValue + translation
     }
     
     required init?(coder aDecoder: NSCoder) {

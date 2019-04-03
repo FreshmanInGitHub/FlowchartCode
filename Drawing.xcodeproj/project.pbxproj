@@ -41,7 +41,6 @@
 		6FC957C321E5CC1E00584DB2 /* TrippleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */; };
 		6FCC492121E86C5200081596 /* InstructionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCC492021E86C5200081596 /* InstructionCell.swift */; };
 		6FD4DF2321C49A1F00133C72 /* Shape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FD4DF2221C49A1F00133C72 /* Shape.swift */; };
-		6FEBA284224E05B300FB496E /* EntranceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA283224E05B300FB496E /* EntranceView.swift */; };
 		6FEBA286224E140000FB496E /* Customized.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FEBA285224E140000FB496E /* Customized.swift */; };
 		6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */; };
 /* End PBXBuildFile section */
@@ -83,7 +82,6 @@
 		6FC957C221E5CC1E00584DB2 /* TrippleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrippleTextFieldCell.swift; sourceTree = "<group>"; };
 		6FCC492021E86C5200081596 /* InstructionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstructionCell.swift; sourceTree = "<group>"; };
 		6FD4DF2221C49A1F00133C72 /* Shape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shape.swift; sourceTree = "<group>"; };
-		6FEBA283224E05B300FB496E /* EntranceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntranceView.swift; sourceTree = "<group>"; };
 		6FEBA285224E140000FB496E /* Customized.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Customized.swift; sourceTree = "<group>"; };
 		6FF11D2521F6FA2C0042D311 /* ExecutionController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExecutionController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -109,7 +107,6 @@
 				6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */,
 				6F54463E224C7C9300C83BAE /* SourceView.swift */,
 				6FEBA285224E140000FB496E /* Customized.swift */,
-				6FEBA283224E05B300FB496E /* EntranceView.swift */,
 			);
 			path = Shape;
 			sourceTree = "<group>";
@@ -299,7 +296,6 @@
 				6FA795BA2238E4C900BB9F96 /* CanvasController.swift in Sources */,
 				6F8ACEB621E390920081ED96 /* IfInstruction.swift in Sources */,
 				6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */,
-				6FEBA284224E05B300FB496E /* EntranceView.swift in Sources */,
 				6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */,
 				6FA795BC2238E58900BB9F96 /* Canvas.swift in Sources */,
 				6F8ACEB221E390920081ED96 /* AssignmentInstruction.swift in Sources */,

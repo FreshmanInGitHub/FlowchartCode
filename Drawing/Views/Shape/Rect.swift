@@ -30,16 +30,16 @@ class Rect: Shape {
         return Rect.path(within: bounds)
     }
     
-    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint? {
+    override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {
         if positionInShapeView != center {
             let lineOne = LinearFunction(start: frame.upperLeft, end: frame.bottomRight)!
             let lineTwo = LinearFunction(start: frame.upperRight, end: frame.bottomLeft)!
-            let line = LinearFunction(start: center, end: positionInShapeView)!
+            let line = LinearFunction(start: center, end: positionInShapeView) ?? LinearFunction(start: center, end: center+CGPoint(x: 1, y: 0))!
             switch (lineOne.isBelow(positionInShapeView), lineTwo.isBelow(positionInShapeView)) {
-            case (true, true): return line.intersection(with: LinearFunction(start: frame.upperLeft, end: frame.upperRight)!)
-            case (true, false): return line.intersection(with: LinearFunction(start: frame.bottomRight, end: frame.upperRight)!)
-            case (false, true): return line.intersection(with: LinearFunction(start: frame.upperLeft, end: frame.bottomLeft)!)
-            default: return line.intersection(with: LinearFunction(start: frame.bottomLeft, end: frame.bottomRight)!)
+            case (true, true): return line.intersection(with: LinearFunction(start: frame.upperLeft, end: frame.upperRight)!)!
+            case (true, false): return line.intersection(with: LinearFunction(start: frame.bottomRight, end: frame.upperRight)!)!
+            case (false, true): return line.intersection(with: LinearFunction(start: frame.upperLeft, end: frame.bottomLeft)!)!
+            default: return line.intersection(with: LinearFunction(start: frame.bottomLeft, end: frame.bottomRight)!)!
             }
         }
         return frame.leftCenter

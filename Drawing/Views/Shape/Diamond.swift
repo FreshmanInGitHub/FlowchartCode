@@ -44,11 +44,7 @@ class Diamond: Shape {
         }
     }
     
-    var lineWhenFalse: LineForConnecting? {
-        didSet {
-            NotificationCenter.default.post(Notification(name: .init("redrawCanvas")))
-        }
-    }
+    var lineWhenFalse: LineForConnecting?
     
     override func related(to shape: Shape?) -> Bool {
         return super.related(to: shape) || nextShapeWhenFalse == shape

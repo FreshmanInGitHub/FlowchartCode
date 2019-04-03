@@ -35,11 +35,7 @@ class Canvas: UIView {
         return lines
     }
     
-    var draggingLine: LineForConnecting? {
-        didSet {
-            setNeedsDisplay()
-        }
-    }
+    var draggingLine: LineForConnecting?
     
     override func draw(_ rect: CGRect) {
         for line in lines {
@@ -72,14 +68,7 @@ class Canvas: UIView {
     
     override func didAddSubview(_ subview: UIView) {
         super.didAddSubview(subview)
-        print(subview.frame.origin)
         updateSizes()
-        setNeedsDisplay()
-    }
-    
-    override func bringSubviewToFront(_ view: UIView) {
-        super.bringSubviewToFront(view)
-        setNeedsDisplay()
     }
     
     func updateSizes() {
@@ -107,12 +96,7 @@ class Canvas: UIView {
     var entrancePath = EntrancePath(point: CGPoint(x: 40, y: 30), shape: nil)
     var entrance: (point: CGPoint, shape: Shape?, isHighlighted: Bool) = (CGPoint(x: 40, y: 30), nil, false) {
         didSet {
-            if entrance.shape == nil && oldValue.shape == nil {
-                entrancePath.translate(with: entrance.point-oldValue.point)
-            } else {
-                entrancePath = EntrancePath(point: entrance.point, shape: entrance.shape)
-            }
-            setNeedsDisplay()
+            entrancePath = EntrancePath(point: entrance.point, shape: entrance.shape)
         }
     }
     

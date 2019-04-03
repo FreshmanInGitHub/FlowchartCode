@@ -14,13 +14,6 @@ class Shape: UIView, Customized {
         return path.contains(point)
     }
     
-    override var frame: CGRect {
-        didSet {
-            NotificationCenter.default.post(Notification(name: .init("updateLinesForShape"), object: self, userInfo: nil))
-        }
-    }
-    
-    
     static func generateShape(with block: Block) -> Shape {
         switch block.type {
         case .diamond: return Diamond(block: block)
@@ -78,11 +71,7 @@ class Shape: UIView, Customized {
         return CGPoint()
     }
     
-    var line: LineForConnecting? {
-        didSet {
-            NotificationCenter.default.post(Notification(name: .init("redrawCanvas")))
-        }
-    }
+    var line: LineForConnecting?
     
     func resetLine(_ shouldResetLine: Bool) {
         if shouldResetLine {

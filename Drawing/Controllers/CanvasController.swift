@@ -25,27 +25,14 @@ class CanvasController: UIViewController {
         canvas.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInCanvas(_:))))
         scrollView.addSubview(canvas)
         
-        // Notifications
-        let defaultCenter = NotificationCenter.default
-        defaultCenter.addObserver(forName: .init(rawValue: "updateLinesForShape"), object: nil, queue: OperationQueue.main, using: didReceiveNotification(_:))
-        defaultCenter.addObserver(forName: .init(rawValue: "redrawCanvas"), object: nil, queue: OperationQueue.main, using: didReceiveNotification(_:))
     }
     
-    public func didReceiveNotification(_ notification: Notification) {
-        switch notification.name {
-        case .init(rawValue: "updateLinesForShape"):
-            updateLines(for: notification.object as? Shape)
-        case .init(rawValue: "redrawCanvas"):
-            canvas.setNeedsDisplay()
-        default:
-            break
-        }
-    }
     
     func updateLines(for shape: Shape?) {
         for otherShape in canvas.shapes {
             otherShape.resetLine(otherShape.related(to: shape))
         }
+        canvas.setNeedsDisplay()
     }
     
     func keepInBounds(_ shape: Shape) {
@@ -54,21 +41,39 @@ class CanvasController: UIViewController {
             let otherOrigin = canvas.entrancePath.bounds.origin
             origin = CGPoint(x: min(origin.x, otherOrigin.x), y: min(origin.y, otherOrigin.y))
         }
-        let translation: CGPoint
-        switch (origin.x < 0, origin.y < 0) {
-        case (true, true): translation = -origin
-        case (true, false): translation = CGPoint(x: -origin.x, y: 0)
-        case (false, true): translation = CGPoint(x: 0, y: -origin.y)
-        default: translation = CGPoint()
-        }
         UIView.animate(withDuration: 0.1) {
-            shape.translate(with: translation)
-        }
-        if canvas.entrance.shape == shape {
-            canvas.entrancePath.translate(with: translation)
+            self.translate(shape, with: self.translationForKeepingInBounds(with: origin))
         }
     }
     
+    private func translate(_ shape: Shape, with translation: CGPoint) {
+        shape.translate(with: translation)
+        self.updateLines(for: shape)
+        if canvas.entrance.shape == shape {
+            translateEntrance(with: translation)
+        }
+    }
+    
+    private func translateEntrance(with translation: CGPoint) {
+        canvas.entrance = (canvas.entrance.point+translation, canvas.entrance.shape, canvas.entrance.isHighlighted)
+    }
+    
+    func keepEntranceInBounds() {
+        if let shape = canvas.entrance.shape {
+            keepInBounds(shape)
+        } else {
+            translateEntrance(with: translationForKeepingInBounds(with: canvas.entrancePath.bounds.origin))
+        }
+    }
+    
+    private func translationForKeepingInBounds(with origin: CGPoint) -> CGPoint {
+        switch (origin.x < 0, origin.y < 0) {
+        case (true, true): return -origin
+        case (true, false): return CGPoint(x: -origin.x, y: 0)
+        case (false, true): return CGPoint(x: 0, y: -origin.y)
+        default: return CGPoint()
+        }
+    }
     
     @IBAction func dragShape(_ sender: UILongPressGestureRecognizer) {
         let position = sender.location(in: canvas)
@@ -80,11 +85,7 @@ class CanvasController: UIViewController {
             shape.isHighlighted = true
             bottomBar.state = .deleteLabel
         case .changed:
-            let translation = position - formerPosition
-            shape.translate(with: translation)
-            if canvas.entrance.shape == shape {
-                canvas.entrancePath.translate(with: translation)
-            }
+            translate(shape, with: position - formerPosition)
         default:
             shape.isHighlighted = false
             if bottomBar.frame.contains(sender.location(in: view)) {
@@ -96,6 +97,7 @@ class CanvasController: UIViewController {
             bottomBar.state = .hidden
         }
         formerPosition = position
+        canvas.setNeedsDisplay()
     }
     
     @IBAction func createLine(_ sender: UIPanGestureRecognizer) {
@@ -106,19 +108,19 @@ class CanvasController: UIViewController {
         case .changed: let _ = tryMovingLine(to: position)
         default: let _ = tryDroppingLine(at: position)
         }
+        canvas.setNeedsDisplay()
     }
     
     
     func tryDraggingLine(at point: CGPoint) -> Bool {
         for shape in canvas.shapes.reversed() {
             if let line = shape.line, line.contains(point) {
-                canvas.draggingLine = line.new(point: point)
                 shape.line = nil
-                return true
-            }
-            if let diamond = shape as? Diamond, let line = diamond.lineWhenFalse, line.contains(point) {
                 canvas.draggingLine = line.new(point: point)
+                return true
+            } else if let diamond = shape as? Diamond, let line = diamond.lineWhenFalse, line.contains(point) {
                 diamond.lineWhenFalse = nil
+                canvas.draggingLine = line.new(point: point)
                 return true
             }
         }
@@ -187,6 +189,7 @@ class CanvasController: UIViewController {
             if tryMovingLine(to: point) {
                 bottomBar.deleteLabel.isHighlighted = bottomBar.bounds.contains(sender.location(in: bottomBar))
             } else if canvas.entrance.isHighlighted {
+                // Shape that Entrance is pointing to could change, can't use translate here!!!
                 canvas.entrance = (point, self.shape(at: point), true)
             } else if !sourceView.isHidden {
                 sourceView.selectePath(sender.location(in: sourceView))
@@ -202,7 +205,7 @@ class CanvasController: UIViewController {
                 bottomBar.state = .hidden
             } else if canvas.entrance.isHighlighted {
                 canvas.entrance.isHighlighted = false
-                //entrance.keepInFrame()
+                keepEntranceInBounds()
                 canvas.updateSizes()
             } else if !sourceView.isHidden {
                 sourceView.isHidden = true
@@ -213,6 +216,7 @@ class CanvasController: UIViewController {
                 }
             }
         }
+        canvas.setNeedsDisplay()
     }
     
     
@@ -286,7 +290,8 @@ class CanvasController: UIViewController {
             otherShape.deleteConnection(to: shape)
         }
         if canvas.entrance.shape == shape {
-            canvas.entrance = (canvas.entrancePath.end, nil, false)
+            canvas.entrance = (canvas.entrance.point, nil, false)
+            keepEntranceInBounds()
         }
     }
     
@@ -333,21 +338,12 @@ extension CanvasController: UIScrollViewDelegate {
 
 extension CanvasController: UIGestureRecognizerDelegate {
     
-//    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-//        if let shape = gestureRecognizer.view as? Shape, !shape.contains(touch.location(in: shape)) {
-//            return false
-//        }
-//        if let entrance = gestureRecognizer.view as? EntranceView {
-//            if !entrance.contains(touch.location(in: entrance)) {
-//                return false
-//            } else {
-//                if let shape = entrance.shape, shape.contains(touch.location(in: shape)) {
-//                    return false
-//                }
-//            }
-//        }
-//        return true
-//    }
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+        if let shape = gestureRecognizer.view as? Shape {
+            return shape.contains(gestureRecognizer.location(in: shape))
+        }
+        return true
+    }
     
 }
 

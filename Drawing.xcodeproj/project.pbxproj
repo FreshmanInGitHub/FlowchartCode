@@ -15,7 +15,6 @@
 		6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54463E224C7C9300C83BAE /* SourceView.swift */; };
 		6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DB224DC220009A679A /* EntrancePath.swift */; };
 		6F5F87DE224DCEB8009A679A /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DD224DCEB8009A679A /* Line.swift */; };
-		6F629C88222931C7001D9DA1 /* ShapeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F629C87222931C7001D9DA1 /* ShapeView.swift */; };
 		6F716AD021EED17F00413E18 /* SingleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */; };
 		6F74282D22436D1400C6E3F6 /* ShapeForEditing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */; };
 		6F76AC1C21905A4A000E65AB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F76AC1B21905A4A000E65AB /* AppDelegate.swift */; };
@@ -54,7 +53,6 @@
 		6F54463E224C7C9300C83BAE /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 		6F5F87DB224DC220009A679A /* EntrancePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntrancePath.swift; sourceTree = "<group>"; };
 		6F5F87DD224DCEB8009A679A /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
-		6F629C87222931C7001D9DA1 /* ShapeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeView.swift; sourceTree = "<group>"; };
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
 		6F74282C22436D1400C6E3F6 /* ShapeForEditing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShapeForEditing.swift; sourceTree = "<group>"; };
 		6F76AC1821905A4A000E65AB /* Drawing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drawing.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -184,7 +182,6 @@
 				6F5CBE8C21EF0E52005F4E3E /* Shape */,
 				6FC957C121E5CB8C00584DB2 /* Cells */,
 				6FB0410A222691F600733C2B /* BottomBar.swift */,
-				6F629C87222931C7001D9DA1 /* ShapeView.swift */,
 				6FA795BB2238E58900BB9F96 /* Canvas.swift */,
 			);
 			path = Views;
@@ -311,7 +308,6 @@
 				6F81F7432227DB4B00EA6918 /* InteractionInstruction.swift in Sources */,
 				6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */,
 				6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */,
-				6F629C88222931C7001D9DA1 /* ShapeView.swift in Sources */,
 				6FB68BD021C391ED00A68969 /* Rect.swift in Sources */,
 				6FB0410B222691F600733C2B /* BottomBar.swift in Sources */,
 				6FA0DD432223D0760017A76B /* Block.swift in Sources */,

@@ -39,4 +39,13 @@ class IfInstruction: Instruction {
         operand2 = aDecoder.decodeString(forKey: "operand2")!
         `operator` = Operator(rawValue: aDecoder.decodeString(forKey: "operator")!)!
     }
+    
+    enum Operator: String{
+        case equalTo = "=="
+        case notEqualTo = "!="
+        case greaterThan = ">"
+        case lessThan = "<"
+        case greaterThanOrEqualTo = ">="
+        case lessThanOrEqualTo = "<="
+    }
 }

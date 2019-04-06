@@ -72,7 +72,7 @@ class Canvas: UIView {
     }
     
     func updateSizes() {
-        let sizeForUpdate = (scrollView.frame.size/2 + minSize) * scrollView.zoomScale
+        let sizeForUpdate = (window?.frame.size ?? CGSize()/2 + minSize) * scrollView.zoomScale
         frame.size = CGSize(width: max(frame.size.width, sizeForUpdate.width), height: max(frame.size.height, sizeForUpdate.height))
     }
     

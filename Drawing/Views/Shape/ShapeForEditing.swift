@@ -61,7 +61,7 @@ extension ShapeForEditing {
         return Rect.path(within: CGRect(x: 5, y: 5, width: bounds.maxX-10, height: bounds.maxY-10))
     }
     func appendForRect(_ text: String) {
-        let opt = Instruction.Operator(rawValue: text) ?? .none
+        let opt = AssignmentInstruction.Operator(rawValue: text) ?? .none
         shape.instructions.append(AssignmentInstruction(operator: opt))
     }
     func cellForRect(_ indexPath: IndexPath) -> InstructionCell {
@@ -89,7 +89,7 @@ extension ShapeForEditing {
         return Diamond.path(within: CGRect(x: -40, y: bounds.midY-height/2, width: width, height: height))
     }
     func appendForDiamond(_ text: String) {
-        let opt = Instruction.Operator(rawValue: text)!
+        let opt = IfInstruction.Operator(rawValue: text)!
         if shape.instructions.isEmpty {
             shape.instructions.append(IfInstruction())
         }

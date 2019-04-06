@@ -10,13 +10,13 @@ import UIKit
 
 class CanvasController: UIViewController {
     @IBOutlet weak var scrollView: UIScrollView!
-    var canvas = Canvas()
     @IBOutlet weak var bottomBar: BottomBar!
     @IBOutlet weak var bottomBarFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var sourceView: SourceView!
     @IBOutlet weak var shapeForEditing: ShapeForEditing!
-    
+    var label = UILabel()
     var formerPosition = CGPoint()
+    var canvas = Canvas()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +27,11 @@ class CanvasController: UIViewController {
         
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        shapeForEditing.tableView.setEditing(editing, animated: true)
+        shapeForEditing.tableView.reloadData()
+    }
     
     func updateLines(for shape: Shape?) {
         for otherShape in canvas.shapes {
@@ -75,43 +80,6 @@ class CanvasController: UIViewController {
         }
     }
     
-    @IBAction func dragShape(_ sender: UILongPressGestureRecognizer) {
-        let position = sender.location(in: canvas)
-        bottomBar.deleteLabel.isHighlighted = bottomBar.frame.contains(sender.location(in: view))
-        let shape = sender.view as! Shape
-        switch sender.state {
-        case .began:
-            canvas.bringSubviewToFront(shape)
-            shape.isHighlighted = true
-            bottomBar.state = .deleteLabel
-        case .changed:
-            translate(shape, with: position - formerPosition)
-        default:
-            shape.isHighlighted = false
-            if bottomBar.frame.contains(sender.location(in: view)) {
-                delete(shape)
-            } else {
-                keepInBounds(shape)
-                canvas.updateSizes()
-            }
-            bottomBar.state = .hidden
-        }
-        formerPosition = position
-        canvas.setNeedsDisplay()
-    }
-    
-    @IBAction func createLine(_ sender: UIPanGestureRecognizer) {
-        let position = sender.location(in: canvas)
-        let shape = sender.view as! Shape
-        switch sender.state {
-        case .began: canvas.draggingLine = shape.lineForPanning(to: position)
-        case .changed: let _ = tryMovingLine(to: position)
-        default: let _ = tryDroppingLine(at: position)
-        }
-        canvas.setNeedsDisplay()
-    }
-    
-    
     func tryDraggingLine(at point: CGPoint) -> Bool {
         for shape in canvas.shapes.reversed() {
             if let line = shape.line, line.contains(point) {
@@ -153,6 +121,78 @@ class CanvasController: UIViewController {
             }
         }
         return nil
+    }
+    
+    private func generateShape(with sourceIndex: Int) -> Shape {
+        let shape: Shape
+        switch sourceIndex {
+        case 1: shape = Diamond(center: formerPosition)
+        case 2: shape = Oval(center: formerPosition)
+        default: shape = Rect(center: formerPosition)
+        }
+        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(createLine(_:)))
+        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dragShape(_:)))
+        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(bringShapeToFront(_:)))
+        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTappedInShape(_:)))
+        doubleTapGestureRecognizer.numberOfTapsRequired = 2
+        doubleTapGestureRecognizer.delegate = self
+        panGestureRecognizer.delegate = self
+        longPressGestureRecognizer.delegate = self
+        tapGestureRecognizer.delegate = self
+        shape.addGestureRecognizer(panGestureRecognizer)
+        shape.addGestureRecognizer(longPressGestureRecognizer)
+        shape.addGestureRecognizer(tapGestureRecognizer)
+        shape.addGestureRecognizer(doubleTapGestureRecognizer)
+        return shape
+    }
+    
+    private func delete(_ shape: Shape) {
+        shape.removeFromSuperview()
+        for otherShape in canvas.shapes {
+            otherShape.deleteConnection(to: shape)
+        }
+        if canvas.entrance.shape == shape {
+            canvas.entrance = (canvas.entrance.point, nil, false)
+            keepEntranceInBounds()
+        }
+    }
+    
+// IBActions
+    
+    @IBAction func dragShape(_ sender: UILongPressGestureRecognizer) {
+        let position = sender.location(in: canvas)
+        bottomBar.deleteLabel.isHighlighted = bottomBar.frame.contains(sender.location(in: view))
+        let shape = sender.view as! Shape
+        switch sender.state {
+        case .began:
+            canvas.bringSubviewToFront(shape)
+            shape.isHighlighted = true
+            bottomBar.state = .deleteLabel
+        case .changed:
+            translate(shape, with: position - formerPosition)
+        default:
+            shape.isHighlighted = false
+            if bottomBar.frame.contains(sender.location(in: view)) {
+                delete(shape)
+            } else {
+                keepInBounds(shape)
+                canvas.updateSizes()
+            }
+            bottomBar.state = .hidden
+        }
+        formerPosition = position
+        canvas.setNeedsDisplay()
+    }
+    
+    @IBAction func createLine(_ sender: UIPanGestureRecognizer) {
+        let position = sender.location(in: canvas)
+        let shape = sender.view as! Shape
+        switch sender.state {
+        case .began: canvas.draggingLine = shape.lineForPanning(to: position)
+        case .changed: let _ = tryMovingLine(to: position)
+        default: let _ = tryDroppingLine(at: position)
+        }
+        canvas.setNeedsDisplay()
     }
     
     @IBAction func bringShapeToFront(_ sender: UITapGestureRecognizer) {
@@ -230,14 +270,6 @@ class CanvasController: UIViewController {
         }
     }
     
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        shapeForEditing.tableView.setEditing(editing, animated: true)
-        shapeForEditing.tableView.reloadData()
-    }
-    
-    var label = UILabel()
     @IBAction func dragLabel(_ sender: UILongPressGestureRecognizer) {
         if let cell = sender.view as? CollectionViewCellWithLabel {
             let position = sender.location(in: view)
@@ -258,40 +290,6 @@ class CanvasController: UIViewController {
                 }
             }
             formerPosition = position
-        }
-    }
-    
-    private func generateShape(with sourceIndex: Int) -> Shape {
-        let shape: Shape
-        switch sourceIndex {
-        case 1: shape = Diamond(center: formerPosition)
-        case 2: shape = Oval(center: formerPosition)
-        default: shape = Rect(center: formerPosition)
-        }
-        let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(createLine(_:)))
-        let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dragShape(_:)))
-        let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(bringShapeToFront(_:)))
-        let doubleTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(doubleTappedInShape(_:)))
-        doubleTapGestureRecognizer.numberOfTapsRequired = 2
-        doubleTapGestureRecognizer.delegate = self
-        panGestureRecognizer.delegate = self
-        longPressGestureRecognizer.delegate = self
-        tapGestureRecognizer.delegate = self
-        shape.addGestureRecognizer(panGestureRecognizer)
-        shape.addGestureRecognizer(longPressGestureRecognizer)
-        shape.addGestureRecognizer(tapGestureRecognizer)
-        shape.addGestureRecognizer(doubleTapGestureRecognizer)
-        return shape
-    }
-    
-    private func delete(_ shape: Shape) {
-        shape.removeFromSuperview()
-        for otherShape in canvas.shapes {
-            otherShape.deleteConnection(to: shape)
-        }
-        if canvas.entrance.shape == shape {
-            canvas.entrance = (canvas.entrance.point, nil, false)
-            keepEntranceInBounds()
         }
     }
     

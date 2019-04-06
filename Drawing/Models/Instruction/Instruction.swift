@@ -16,20 +16,6 @@ class Instruction: NSObject, NSCoding {
     
     override init() { }
     
-    enum Operator: String{
-        case plus = "+"
-        case minus = "-"
-        case multiply = "*"
-        case divide = "/"
-        case equalTo = "=="
-        case notEqualTo = "!="
-        case greaterThan = ">"
-        case lessThan = "<"
-        case greaterThanOrEqualTo = ">="
-        case lessThanOrEqualTo = "<="
-        case none = ""
-    }
-    
     func encode(with aCoder: NSCoder) { }
     
     required init?(coder aDecoder: NSCoder) { }

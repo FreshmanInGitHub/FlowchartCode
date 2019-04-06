@@ -56,4 +56,12 @@ class AssignmentInstruction: Instruction {
         operand2 = aDecoder.decodeString(forKey: "operand2")!
         `operator` = Operator(rawValue: aDecoder.decodeString(forKey: "operator")!)!
     }
+    
+    enum Operator: String{
+        case plus = "+"
+        case minus = "-"
+        case multiply = "*"
+        case divide = "/"
+        case none = ""
+    }
 }

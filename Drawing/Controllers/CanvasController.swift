@@ -9,29 +9,96 @@
 import UIKit
 
 class CanvasController: UIViewController {
+    
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var bottomBar: BottomBar!
-    @IBOutlet weak var bottomBarFlowLayout: UICollectionViewFlowLayout!
     @IBOutlet weak var sourceView: SourceView!
-    @IBOutlet weak var shapeForEditing: ShapeForEditing!
-    var label = UILabel()
+    @IBOutlet weak var deleteLabel: UILabel!
     var formerPosition = CGPoint()
     var canvas = Canvas()
+    var program = Program() {
+        didSet {
+            setCanvas()
+        }
+    }
+    
+    // Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.delegate = self
-        bottomBar.dataSource = self
         canvas.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInCanvas(_:))))
         scrollView.addSubview(canvas)
         
     }
     
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        shapeForEditing.tableView.setEditing(editing, animated: true)
-        shapeForEditing.tableView.reloadData()
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        if let controller = segue.destination as? EditingViewController, let shape = sender as? Shape {
+            controller.shape = shape
+        }
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        setProgram()
+        DataBase.savePrograms()
+        super.viewWillDisappear(animated)
+    }
+    
+    func setCanvas() {
+        let blocks = program.blocks
+        let entrance = program.entrance
+        let links = blocks.links({$0.next})
+        let linksWhenFalse = blocks.links({$0.nextWhenFalse})
+        
+        var shapes = [Shape]()
+        for block in blocks {
+            shapes.append(generateShape(with: block))
+        }
+        let _ = shapes.setNext(links: links, {$0.nextShape = $1})
+        let _ = shapes.setNext(links: linksWhenFalse) { shape, nextShapeWhenFalse in
+            if let diamond = shape as? Diamond {
+                diamond.nextShapeWhenFalse = nextShapeWhenFalse
+            }
+        }
+        for shape in shapes {
+            shape.resetLine(true)
+            canvas.addSubview(shape)
+        }
+        
+        if let index = entrance.index {
+            canvas.entrance = (entrance.point, shapes[index], false)
+        } else {
+            canvas.entrance = (entrance.point, nil, false)
+        }
+        
+        canvas.setNeedsDisplay()
+    }
+    
+    func setProgram() {
+        let shapes = canvas.shapes
+        let entrance = canvas.entrance
+        let links = shapes.links({$0.nextShape})
+        let linksWhenFalse = shapes.links { (shape) -> Shape? in
+            if let diamond = shape as? Diamond {
+                return diamond.nextShapeWhenFalse
+            }
+            return nil
+        }
+        
+        var blocks = [Block]()
+        shapes.forEach({ blocks.append(Block(shape: $0)) })
+        let _ = blocks.setNext(links: links, {$0.next = $1})
+        let _ = blocks.setNext(links: linksWhenFalse, {$0.nextWhenFalse = $1})
+        program.blocks = blocks
+        
+        if let shape = entrance.shape, let index = shapes.firstIndex(of: shape) {
+            program.entrance = (entrance.point, index)
+        } else {
+            program.entrance = (entrance.point, nil)
+        }
+    }
+    
+    
     
     func updateLines(for shape: Shape?) {
         for otherShape in canvas.shapes {
@@ -130,6 +197,22 @@ class CanvasController: UIViewController {
         case 2: shape = Oval(center: formerPosition)
         default: shape = Rect(center: formerPosition)
         }
+        addGestureRecognizers(for: shape)
+        return shape
+    }
+    
+    private func generateShape(with block: Block) -> Shape {
+        let shape: Shape
+        switch block.type {
+        case .rect: shape = Rect(block: block)
+        case .diamond: shape = Diamond(block: block)
+        case .oval: shape = Oval(block: block)
+        }
+        addGestureRecognizers(for: shape)
+        return shape
+    }
+    
+    private func addGestureRecognizers(for shape: Shape) {
         let panGestureRecognizer = UIPanGestureRecognizer(target: self, action: #selector(createLine(_:)))
         let longPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(dragShape(_:)))
         let tapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(bringShapeToFront(_:)))
@@ -143,14 +226,11 @@ class CanvasController: UIViewController {
         shape.addGestureRecognizer(longPressGestureRecognizer)
         shape.addGestureRecognizer(tapGestureRecognizer)
         shape.addGestureRecognizer(doubleTapGestureRecognizer)
-        return shape
     }
     
     private func delete(_ shape: Shape) {
         shape.removeFromSuperview()
-        for otherShape in canvas.shapes {
-            otherShape.deleteConnection(to: shape)
-        }
+        canvas.shapes.forEach({ $0.deleteConnection(to: shape) })
         if canvas.entrance.shape == shape {
             canvas.entrance = (canvas.entrance.point, nil, false)
             keepEntranceInBounds()
@@ -161,24 +241,24 @@ class CanvasController: UIViewController {
     
     @IBAction func dragShape(_ sender: UILongPressGestureRecognizer) {
         let position = sender.location(in: canvas)
-        bottomBar.deleteLabel.isHighlighted = bottomBar.frame.contains(sender.location(in: view))
+        deleteLabel.isHighlighted = deleteLabel.bounds.contains(sender.location(in: deleteLabel))
         let shape = sender.view as! Shape
         switch sender.state {
         case .began:
             canvas.bringSubviewToFront(shape)
             shape.isHighlighted = true
-            bottomBar.state = .deleteLabel
+            deleteLabel.isHidden = false
         case .changed:
             translate(shape, with: position - formerPosition)
         default:
             shape.isHighlighted = false
-            if bottomBar.frame.contains(sender.location(in: view)) {
+            if deleteLabel.bounds.contains(sender.location(in: deleteLabel)) {
                 delete(shape)
             } else {
                 keepInBounds(shape)
                 canvas.updateSizes()
             }
-            bottomBar.state = .hidden
+            deleteLabel.isHidden = true
         }
         formerPosition = position
         canvas.setNeedsDisplay()
@@ -204,11 +284,7 @@ class CanvasController: UIViewController {
     
     @IBAction func doubleTappedInShape(_ sender: UITapGestureRecognizer) {
         if let shape = sender.view as? Shape {
-            shapeForEditing.shape = shape
-            bottomBar.state = .editing
-            navigationItem.rightBarButtonItem = shape is Rect ? editButtonItem : nil
-            isEditing = false
-            navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Back", style: .done, target: self, action: #selector(quitEditingShape(_:)))
+            self.performSegue(withIdentifier: "editShape", sender: shape)
         }
     }
     
@@ -217,7 +293,7 @@ class CanvasController: UIViewController {
         switch sender.state {
         case .began:
             if tryDraggingLine(at: point) {
-                bottomBar.state = .deleteLabel
+                deleteLabel.isHidden = false
             } else if canvas.entrancePath.contains(point) {
                 canvas.entrance.isHighlighted = true
             } else {
@@ -227,7 +303,7 @@ class CanvasController: UIViewController {
             }
         case .changed:
             if tryMovingLine(to: point) {
-                bottomBar.deleteLabel.isHighlighted = bottomBar.bounds.contains(sender.location(in: bottomBar))
+                deleteLabel.isHighlighted = deleteLabel.bounds.contains(sender.location(in: deleteLabel))
             } else if canvas.entrance.isHighlighted {
                 // Shape that Entrance is pointing to could change, can't use translate here!!!
                 canvas.entrance = (point, self.shape(at: point), true)
@@ -236,13 +312,13 @@ class CanvasController: UIViewController {
             }
         default:
             if let line = canvas.draggingLine {
-                if bottomBar.bounds.contains(sender.location(in: bottomBar)) {
+                if deleteLabel.bounds.contains(sender.location(in: deleteLabel)) {
                     line.initiator.deleteConnection(with: line.color)
                     canvas.draggingLine = nil
                 } else if !tryDroppingLine(at: point) {
                     line.initiator.resetLine(true)
                 }
-                bottomBar.state = .hidden
+                deleteLabel.isHidden = true
             } else if canvas.entrance.isHighlighted {
                 canvas.entrance.isHighlighted = false
                 keepEntranceInBounds()
@@ -260,72 +336,6 @@ class CanvasController: UIViewController {
     }
     
     
-    @IBAction func quitEditingShape(_ sender: UIBarButtonItem) {
-        if shapeForEditing.shape.canQuitEditing {
-            shapeForEditing.isHidden = true
-            shapeForEditing.shape.tableView.reloadData()
-            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(saveProgram(_:)))
-            navigationItem.leftBarButtonItem = navigationItem.backBarButtonItem
-            bottomBar.state = .hidden
-        }
-    }
-    
-    @IBAction func dragLabel(_ sender: UILongPressGestureRecognizer) {
-        if let cell = sender.view as? CollectionViewCellWithLabel {
-            let position = sender.location(in: view)
-            switch sender.state {
-            case .began:
-                label.textColor = .lightGray
-                label.font = cell.label.font
-                label.text = cell.label.text
-                let size = label.intrinsicContentSize
-                label.frame = CGRect(origin: position-CGPoint(x: size.width*3/4, y: size.height), size: size)
-                view.addSubview(label)
-            case .changed:
-                label.translate(with: position - formerPosition)
-            default:
-                label.removeFromSuperview()
-                if shapeForEditing.path.contains(sender.location(in: shapeForEditing)) {
-                    shapeForEditing.append(label.text!)
-                }
-            }
-            formerPosition = position
-        }
-    }
-    
-    @IBAction func saveProgram(_ sender: UIBarButtonItem) {
-        //program.set(scale: canvas.scale, shapes: canvas.shapes, entrance: canvas.entrance)
-        //        DataBase.savePrograms()
-    }
-    
-    
-    
-}
-
-extension CanvasController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        bottomBarFlowLayout.itemSize = CGSize(width: 55, height: 55)
-        switch bottomBar.state {
-        case .editing:
-            if shapeForEditing.shape is Oval {
-                bottomBarFlowLayout.itemSize = CGSize(width: 65, height: 55)
-                return 3
-            }
-            return 5
-        default: return 0
-        }
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: UICollectionViewCell
-        switch shapeForEditing.shape {
-        case is Diamond: cell = bottomBar.labelCellForDiamond(forItemAt: indexPath)
-        case is Oval: cell = bottomBar.labelCellForOval(forItemAt: indexPath)
-        default: cell = bottomBar.labelCellForRect(forItemAt: indexPath)
-        }
-        cell.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(dragLabel(_:))))
-        return cell
-    }
 }
 
 extension CanvasController: UIScrollViewDelegate {

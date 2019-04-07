@@ -18,50 +18,35 @@ class Program: NSObject, NSCoding {
             }
         }
     }
-    var scale: CGFloat = 1
+    
     var blocks = [Block]()
-    var entrance: (index: Int, angle: CGFloat)?
+    var entrance: (point: CGPoint, index: Int?) = (CGPoint(x: 40, y: 30), nil)
     
     override init() {
     }
-//    
-//    func set(scale: CGFloat, shapes: [Shape], entrance: EntranceView) {
-//        self.scale = scale
-//        blocks = [Block]()
-//        for shape in shapes {
-//            blocks.append(Block(shape: shape))
-//        }
-//        for index in shapes.indices {
-//            if let next = shapes[index].nextShape {
-//                blocks[index].next = shapes.firstIndex(of: next)!
-//            }
-//            if let diamond = shapes[index] as? Diamond, let nextWhenFalse = diamond.nextShapeWhenFalse {
-//                blocks[index].nextWhenFalse = shapes.firstIndex(of: nextWhenFalse)!
-//            }
-//        }
-//        if let shape = entrance.shape {
-//            self.entrance = (shapes.firstIndex(of: shape)!, entrance.path.angle)
-//        } else {
-//            self.entrance = nil
-//        }
-//    }
+    
     
     required init?(coder aDecoder: NSCoder) {
         title = aDecoder.decodeString(forKey: "title")!
-        scale = aDecoder.decodeCGFloat(forKey: "scale")!
         blocks = aDecoder.decodeObject(forKey: "blocks") as! [Block]
-        if aDecoder.containsValue(forKey: "index"), aDecoder.containsValue(forKey: "angle") {
-            entrance = (aDecoder.decodeInteger(forKey: "index"), aDecoder.decodeCGFloat(forKey: "angle")!)
-        }
+        entrance.point = aDecoder.decodeCGPoint(forKey: "point")
+        entrance.index = aDecoder.decodeObject(forKey: "index") as? Int
+        
+        let links = aDecoder.decodeObject(forKey: "links") as! [Int?]
+        let linksWhenFalse = aDecoder.decodeObject(forKey: "linksWhenFalse") as! [Int?]
+        let _ = blocks.setNext(links: links, { $0.next = $1 })
+        let _ = blocks.setNext(links: linksWhenFalse, { $0.nextWhenFalse = $1 })
     }
     
     func encode(with aCoder: NSCoder) {
+        let links = blocks.links({ $0.next })
+        let linksWhenFalse = blocks.links({ $0.nextWhenFalse })
+        
         aCoder.encode(title, forKey: "title")
-        aCoder.encode(scale, forKey: "scale")
         aCoder.encode(blocks, forKey: "blocks")
-        if entrance != nil {
-            aCoder.encode(entrance!.index, forKey: "index")
-            aCoder.encode(entrance!.angle, forKey: "angle")
-        }
+        aCoder.encode(entrance.point, forKey: "point")
+        aCoder.encode(entrance.index, forKey: "index")
+        aCoder.encode(links, forKey: "links")
+        aCoder.encode(linksWhenFalse, forKey: "linksWhenFalse")
     }
 }

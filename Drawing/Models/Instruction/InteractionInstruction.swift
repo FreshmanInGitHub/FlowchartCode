@@ -11,11 +11,11 @@ import Foundation
 class InteractionInstruction: Instruction {
     
     var content = ""
-    var type: InteractionType = .print
+    var `operator` = Operator.print
     
     override var description: String {
         if !isFinished { return "" }
-        switch type {
+        switch `operator` {
         case .print: return "Print(\"\(content)\")"
         case .input: return "Input: \(content)"
         case .output: return "Output: \(content)"
@@ -23,9 +23,7 @@ class InteractionInstruction: Instruction {
     }
     
     override var isFinished: Bool {
-        if content.isEmpty { return false }
-        else if type != .print { return !content.isDouble }
-        return true
+        return !content.isEmpty && (`operator` == .print || !content.isDouble)
     }
     
     override init() {
@@ -35,18 +33,22 @@ class InteractionInstruction: Instruction {
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(content, forKey: "content")
-        aCoder.encode(type.rawValue, forKey: "type")
+        aCoder.encode(`operator`.rawValue, forKey: "type")
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init()
         content = aDecoder.decodeString(forKey: "content")!
-        type = InteractionType(rawValue: aDecoder.decodeString(forKey: "type") ?? "print")!
+        `operator` = Operator(rawValue: aDecoder.decodeString(forKey: "type") ?? "print")!
     }
     
-    enum InteractionType: String {
-        case print
-        case input
-        case output
+    enum Operator: String {
+        case print = "Print"
+        case input = "Input"
+        case output = "Output"
+    }
+    
+    static var operatorSequence: [String] {
+        return ["Print", "Input", "Output"]
     }
 }

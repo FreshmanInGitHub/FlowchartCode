@@ -7,9 +7,9 @@
 //
 
 import Foundation
-import UIKit
 
 class DataBase {
+    
     static let archivePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!.appendingPathComponent("programs").path
     
     static var programs = DataBase.loadPrograms() {

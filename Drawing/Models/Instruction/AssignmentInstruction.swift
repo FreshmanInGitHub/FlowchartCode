@@ -19,12 +19,7 @@ class AssignmentInstruction: Instruction {
     }
     
     override var isFinished: Bool {
-        if variable.isEmpty || operand1.isEmpty {
-            return false
-        } else if `operator` != .none, operand2.isEmpty {
-            return false
-        }
-        return true
+        return !variable.isEmpty && !variable.isDouble && !operand1.isEmpty && (!operand2.isEmpty || `operator` == .none)
     }
     
     var variable = ""
@@ -62,6 +57,10 @@ class AssignmentInstruction: Instruction {
         case minus = "-"
         case multiply = "*"
         case divide = "/"
-        case none = ""
+        case none = "="
+    }
+    
+    static var operatorSequence: [String] {
+        return ["+", "-", "*", "/", "="]
     }
 }

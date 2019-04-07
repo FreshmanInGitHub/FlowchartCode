@@ -14,14 +14,6 @@ class Shape: UIView, Customized {
         return path.contains(point)
     }
     
-    static func generateShape(with block: Block) -> Shape {
-        switch block.type {
-        case .diamond: return Diamond(block: block)
-        case .oval: return Oval(block: block)
-        default: return Rect(block: block)
-        }
-    }
-    
     var nextShape: Shape? {
         didSet {
             resetLine(true)

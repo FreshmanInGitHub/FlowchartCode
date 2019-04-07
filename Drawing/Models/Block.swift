@@ -11,21 +11,16 @@ import UIKit
 
 class Block: NSObject, NSCoding {
     
-    
     func encode(with aCoder: NSCoder) {
         aCoder.encode(center, forKey: "center")
         aCoder.encode(type.rawValue, forKey: "type")
         aCoder.encode(instructions, forKey: "instructions")
-        aCoder.encode(next, forKey: "next")
-        aCoder.encode(nextWhenFalse, forKey: "nextWhenFalse")
     }
     
     required init?(coder aDecoder: NSCoder) {
         type = ShapeType(rawValue: aDecoder.decodeInteger(forKey: "type"))!
         center = aDecoder.decodeCGPoint(forKey: "center")
         instructions = aDecoder.decodeObject(forKey: "instructions") as! [Instruction]
-        next = aDecoder.decodeObject(forKey: "next") as? Int
-        nextWhenFalse = aDecoder.decodeObject(forKey: "nextWhenFalse") as? Int
     }
     
     init(shape: Shape) {
@@ -41,8 +36,8 @@ class Block: NSObject, NSCoding {
     var instructions: [Instruction]
     var type: ShapeType
     var center: CGPoint
-    var next: Int?
-    var nextWhenFalse: Int?
+    var next: Block?
+    var nextWhenFalse: Block?
     
     enum ShapeType: Int {
         case rect

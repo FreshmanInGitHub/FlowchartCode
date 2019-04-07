@@ -20,7 +20,7 @@ class SingleTextFieldCell: InstructionCell, UITextFieldDelegate {
     
     override func didSetInstruction() {
         if let instruction = instruction as? InteractionInstruction {
-            firstLabel?.text = instruction.type.rawValue
+            firstLabel?.text = instruction.operator.rawValue
             firstTextField?.text = instruction.content
         }
     }

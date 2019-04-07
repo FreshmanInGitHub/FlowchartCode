@@ -144,3 +144,28 @@ extension CGSize {
     }
 }
 
+extension Array where Element: Equatable {
+    func links(_ nextOf: (Element) -> Element?) -> [Int?] {
+        var links = [Int?]()
+        for index in indices {
+            if let nextElement = nextOf(self[index]), let nextIndex = firstIndex(where: { $0 == nextElement }) {
+                links.append(nextIndex)
+            } else {
+                links.append(nil)
+            }
+        }
+        return links
+    }
+    
+    func setNext(links: [Int?], _ action: (Element, Element?) -> Void) -> Bool {
+        if links.count == count {
+            for index in indices {
+                if let nextIndex = links[index] {
+                    action(self[index], self[nextIndex])
+                }
+            }
+            return true
+        }
+        return false
+    }
+}

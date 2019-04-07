@@ -48,4 +48,8 @@ class IfInstruction: Instruction {
         case greaterThanOrEqualTo = ">="
         case lessThanOrEqualTo = "<="
     }
+    
+    static var operatorSequence: [String] {
+        return ["==", "!=", ">", "<", ">=", "<="]
+    }
 }

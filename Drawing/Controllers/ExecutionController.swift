@@ -10,15 +10,15 @@ import UIKit
 
 class ExecutionController: UITableViewController {
     var program = Program()
-    var current: Int?
+    var current: Block?
     var register = [String: Double]()
     var cells = [UITableViewCell]()
     
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if let startIndex = program.entrance?.index {
-            process(startIndex)
+        if let startIndex = program.entrance.index {
+            process(program.blocks[startIndex])
         } else {
             programEnded()
         }
@@ -36,24 +36,23 @@ class ExecutionController: UITableViewController {
         return cells[indexPath.row]
     }
     
-    func process(_ index: Int?) {
-        var index: Int? = index
-        while index != nil {
-            var nextIndex: Int?
-            switch program.blocks[index!].type {
-            case .rect: nextIndex = processRect(index!)
-            case .diamond: nextIndex = processDiamond(index!)
-            case .oval: nextIndex = processOval(index!)
+    func process(_ block: Block?) {
+        var block = block
+        while block != nil {
+            var next: Block?
+            switch block!.type {
+            case .rect: next = processRect(block!)
+            case .diamond: next = processDiamond(block!)
+            case .oval: next = processOval(block!)
             }
-            index = nextIndex
+            block = next
         }
         if self.current == nil {
             programEnded()
         }
     }
     
-    func processRect(_ index: Int) -> Int? {
-        let block = program.blocks[index]
+    func processRect(_ block: Block) -> Block? {
         let instructions = block.instructions as! [AssignmentInstruction]
         for instruction in instructions {
             let variable = instruction.variable
@@ -70,8 +69,7 @@ class ExecutionController: UITableViewController {
         return block.next
     }
     
-    func processDiamond(_ index: Int) -> Int? {
-        let block = program.blocks[index]
+    func processDiamond(_ block: Block) -> Block? {
         var result = true
         if let instruction = block.instructions.first as? IfInstruction {
             let operand1 = value(with: instruction.operand1)
@@ -87,17 +85,16 @@ class ExecutionController: UITableViewController {
         return result ? block.next : block.nextWhenFalse
     }
     
-    func processOval(_ index: Int) -> Int? {
-        let block = program.blocks[index]
+    func processOval(_ block: Block) -> Block? {
         var cell: UITableViewCell?
         if let instruction = block.instructions.first as? InteractionInstruction {
             let indexPath = IndexPath(row: cells.count, section: 0)
-            switch instruction.type {
+            switch instruction.operator {
             case .input:
                 let inputCell = tableView.dequeueReusableCell(withIdentifier: "InputCell", for: indexPath) as! InputCell
                 inputCell.textField.delegate = self
                 inputCell.label.text = instruction.content + " = "
-                self.current = index
+                self.current = block
                 cell = inputCell
             case .output:
                 cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
@@ -128,8 +125,7 @@ class ExecutionController: UITableViewController {
 
 extension  ExecutionController: UITextFieldDelegate {
     func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        if reason == .committed {
-            let block = program.blocks[current!]
+        if reason == .committed, let block = current {
             if let value = Double(textField.text!), let instruction = block.instructions[0] as? InteractionInstruction {
                 register[instruction.content] = value
                 let indexPath = IndexPath(row: cells.count-1, section: 0)

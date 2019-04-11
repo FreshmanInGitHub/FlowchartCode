@@ -13,7 +13,7 @@ class EditingViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    var shape: Shape?
+    var shape = Shape()
     
     var label: UILabel? {
         didSet {

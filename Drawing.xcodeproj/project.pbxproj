@@ -11,7 +11,6 @@
 		6F4D6289221C219200731463 /* InputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D6288221C219200731463 /* InputCell.swift */; };
 		6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */; };
 		6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */; };
-		6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F54463E224C7C9300C83BAE /* SourceView.swift */; };
 		6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DB224DC220009A679A /* EntrancePath.swift */; };
 		6F5F87DE224DCEB8009A679A /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DD224DCEB8009A679A /* Line.swift */; };
 		6F716AD021EED17F00413E18 /* SingleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */; };
@@ -49,7 +48,6 @@
 		6F4D6288221C219200731463 /* InputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCell.swift; sourceTree = "<group>"; };
 		6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTableViewController.swift; sourceTree = "<group>"; };
 		6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTextFieldCell.swift; sourceTree = "<group>"; };
-		6F54463E224C7C9300C83BAE /* SourceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SourceView.swift; sourceTree = "<group>"; };
 		6F5F87DB224DC220009A679A /* EntrancePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntrancePath.swift; sourceTree = "<group>"; };
 		6F5F87DD224DCEB8009A679A /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
@@ -102,7 +100,6 @@
 				6FB68BD121C3F1F900A68969 /* Oval.swift */,
 				6FB68BCF21C391ED00A68969 /* Rect.swift */,
 				6FD4DF2221C49A1F00133C72 /* Shape.swift */,
-				6F54463E224C7C9300C83BAE /* SourceView.swift */,
 				6FEBA285224E140000FB496E /* Customized.swift */,
 			);
 			path = Shape;
@@ -309,7 +306,6 @@
 				6F917920225C9AB500D753DF /* Source.swift in Sources */,
 				6F81F7432227DB4B00EA6918 /* InteractionInstruction.swift in Sources */,
 				6F728B87225872E10072AB8B /* EditingView.swift in Sources */,
-				6F54463F224C7C9300C83BAE /* SourceView.swift in Sources */,
 				6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */,
 				6FB68BD021C391ED00A68969 /* Rect.swift in Sources */,
 				6FA0DD432223D0760017A76B /* Block.swift in Sources */,

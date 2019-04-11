@@ -10,6 +10,12 @@ import UIKit
 
 class Shape: UIView, Customized {
     
+    enum style: Int {
+    case rect
+    case oval
+    case diamond
+    }
+    
     func contains(_ point: CGPoint) -> Bool {
         return path.contains(point)
     }
@@ -20,11 +26,11 @@ class Shape: UIView, Customized {
         }
     }
     
-    var instructions = [Instruction]() {
-        didSet {
-            tableView.reloadData()
-        }
-    }
+//    var instructions = [Instruction]() {
+//        didSet {
+//            tableView.reloadData()
+//        }
+//    }
     
     lazy var tableView = UITableView(frame: CGRect(x: bounds.minX+1, y: bounds.minY+bounds.height*0.4, width: bounds.width-2, height: bounds.height*0.2))
     
@@ -100,38 +106,38 @@ class Shape: UIView, Customized {
     }
     
 }
-
-extension Shape: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return instructions.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.font = cell.textLabel?.font.withSize(tableView.rowHeight)
-        cell.textLabel?.adjustsFontSizeToFitWidth = true
-        cell.textLabel?.textAlignment = .center
-        cell.textLabel?.baselineAdjustment = .alignCenters
-        cell.textLabel?.text = instructions[indexPath.row].description
-        cell.backgroundColor = .clear
-        return cell
-    }
-    
-    override func didMoveToWindow() {
-        super.didMoveToWindow()
-        clipsToBounds = false
-        backgroundColor = UIColor.clear
-        tableView.separatorStyle = .none
-        tableView.separatorInset = .zero
-        tableView.isScrollEnabled = false
-        tableView.backgroundColor = UIColor.clear
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.allowsSelection = false
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.rowHeight = tableView.bounds.height
-        addSubview(tableView)
-    }
-    
-}
+//
+//extension Shape: UITableViewDelegate, UITableViewDataSource {
+//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+//        return instructions.count
+//    }
+//    
+//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+//        cell.textLabel?.font = cell.textLabel?.font.withSize(tableView.rowHeight)
+//        cell.textLabel?.adjustsFontSizeToFitWidth = true
+//        cell.textLabel?.textAlignment = .center
+//        cell.textLabel?.baselineAdjustment = .alignCenters
+//        cell.textLabel?.text = instructions[indexPath.row].description
+//        cell.backgroundColor = .clear
+//        return cell
+//    }
+//    
+//    override func didMoveToWindow() {
+//        super.didMoveToWindow()
+//        clipsToBounds = false
+//        backgroundColor = UIColor.clear
+//        tableView.separatorStyle = .none
+//        tableView.separatorInset = .zero
+//        tableView.isScrollEnabled = false
+//        tableView.backgroundColor = UIColor.clear
+//        tableView.dataSource = self
+//        tableView.delegate = self
+//        tableView.allowsSelection = false
+//        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+//        tableView.rowHeight = tableView.bounds.height
+//        addSubview(tableView)
+//    }
+//    
+//}
 

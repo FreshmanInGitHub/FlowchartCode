@@ -13,7 +13,7 @@ class EditingViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
     
-    var shape: Shape = Rect(center: CGPoint())
+    var shape: Shape?
     
     var label: UILabel? {
         didSet {
@@ -58,11 +58,12 @@ class EditingViewController: UIViewController {
             case .began:
                 if let label = cell.backgroundView as? UILabel {
                     label.textColor = .lightGray
+                    label.font = label.font.withSize(30)
                     UIView.animate(withDuration: 0.1) {
-                        label.translate(with: -CGPoint(x: label.frame.width, y: label.frame.height))
+                        label.translate(with: -CGPoint(x: label.frame.width, y: 80))
                     }
                     label.removeFromSuperview()
-                    label.frame.origin = position-CGPoint(x: label.frame.width, y: label.frame.height)
+                    label.frame.origin = position-CGPoint(x: label.frame.width, y: 80)
                     self.label = label
                 }
             case .changed:
@@ -187,7 +188,9 @@ extension EditingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
         let label = UILabel(frame: cell.frame)
-        label.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .body), size: shape is Oval ? 20 : 25)
+        label.textColor = .darkGray
+        label.adjustsFontSizeToFitWidth = true
+        //label.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .body), size: shape is Oval ? 20 : 25)
         label.textAlignment = .center
         label.baselineAdjustment = .alignCenters
         switch shape {

@@ -9,25 +9,34 @@
 import UIKit
 
 class CanvasController: UIViewController {
-    
+    @IBOutlet weak var rectSource: Source!
+    @IBOutlet weak var diamondSource: Source!
+    @IBOutlet weak var ovalSource: Source!
     @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var sourceView: SourceView!
     @IBOutlet weak var deleteLabel: UILabel!
     var formerPosition = CGPoint()
     var canvas = Canvas()
-    var program = Program() {
-        didSet {
-            setCanvas()
-        }
-    }
+    var program = Program()
+    var newShape: Shape?
     
     // Life Cycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setCanvas()
+        
         scrollView.delegate = self
         canvas.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInCanvas(_:))))
         scrollView.addSubview(canvas)
+        
+        rectSource.style = .rect
+        diamondSource.style = .diamond
+        ovalSource.style = .oval
+        
+        rectSource.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInSources(_:))))
+        diamondSource.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInSources(_:))))
+        ovalSource.addGestureRecognizer(UILongPressGestureRecognizer(target: self, action: #selector(longPressedInSources(_:))))
+        
         
     }
     
@@ -98,7 +107,11 @@ class CanvasController: UIViewController {
         }
     }
     
-    
+    func hideSources(_ shouldHideSources: Bool) {
+        rectSource.isHidden = shouldHideSources
+        diamondSource.isHidden = shouldHideSources
+        ovalSource.isHidden = shouldHideSources
+    }
     
     func updateLines(for shape: Shape?) {
         for otherShape in canvas.shapes {
@@ -203,7 +216,7 @@ class CanvasController: UIViewController {
     
     private func generateShape(with block: Block) -> Shape {
         let shape: Shape
-        switch block.type {
+        switch block.style {
         case .rect: shape = Rect(block: block)
         case .diamond: shape = Diamond(block: block)
         case .oval: shape = Oval(block: block)
@@ -248,6 +261,7 @@ class CanvasController: UIViewController {
             canvas.bringSubviewToFront(shape)
             shape.isHighlighted = true
             deleteLabel.isHidden = false
+            hideSources(true)
         case .changed:
             translate(shape, with: position - formerPosition)
         default:
@@ -259,6 +273,7 @@ class CanvasController: UIViewController {
                 canvas.updateSizes()
             }
             deleteLabel.isHidden = true
+            hideSources(false)
         }
         formerPosition = position
         canvas.setNeedsDisplay()
@@ -268,9 +283,13 @@ class CanvasController: UIViewController {
         let position = sender.location(in: canvas)
         let shape = sender.view as! Shape
         switch sender.state {
-        case .began: canvas.draggingLine = shape.lineForPanning(to: position)
+        case .began:
+            canvas.draggingLine = shape.lineForPanning(to: position)
+            hideSources(true)
         case .changed: let _ = tryMovingLine(to: position)
-        default: let _ = tryDroppingLine(at: position)
+        default:
+            let _ = tryDroppingLine(at: position)
+            hideSources(false)
         }
         canvas.setNeedsDisplay()
     }
@@ -290,25 +309,22 @@ class CanvasController: UIViewController {
     
     @IBAction func longPressedInCanvas(_ sender: UILongPressGestureRecognizer) {
         let point = sender.location(in: canvas)
+        deleteLabel.isHighlighted = deleteLabel.bounds.contains(sender.location(in: deleteLabel))
         switch sender.state {
         case .began:
             if tryDraggingLine(at: point) {
                 deleteLabel.isHidden = false
+                hideSources(true)
             } else if canvas.entrancePath.contains(point) {
                 canvas.entrance.isHighlighted = true
-            } else {
-                sourceView.frame.origin = sender.location(in: view) - CGPoint(x: sourceView.frame.width/2, y: sourceView.frame.height*3/4)
-                sourceView.isHidden = false
-                formerPosition = sender.location(in: canvas)
+                hideSources(true)
             }
         case .changed:
             if tryMovingLine(to: point) {
-                deleteLabel.isHighlighted = deleteLabel.bounds.contains(sender.location(in: deleteLabel))
+                // Do nothing.
             } else if canvas.entrance.isHighlighted {
                 // Shape that Entrance is pointing to could change, can't use translate here!!!
                 canvas.entrance = (point, self.shape(at: point), true)
-            } else if !sourceView.isHidden {
-                sourceView.selectePath(sender.location(in: sourceView))
             }
         default:
             if let line = canvas.draggingLine {
@@ -323,16 +339,39 @@ class CanvasController: UIViewController {
                 canvas.entrance.isHighlighted = false
                 keepEntranceInBounds()
                 canvas.updateSizes()
-            } else if !sourceView.isHidden {
-                sourceView.isHidden = true
-                if let index = sourceView.selectedPathIndex {
-                    let shape = generateShape(with: index)
-                    canvas.addSubview(shape)
-                    keepInBounds(shape)
-                }
             }
+            hideSources(false)
         }
         canvas.setNeedsDisplay()
+    }
+    
+    @IBAction func longPressedInSources(_ sender: UILongPressGestureRecognizer) {
+        let point = sender.location(in: canvas)
+        deleteLabel.isHighlighted = deleteLabel.bounds.contains(sender.location(in: deleteLabel))
+        switch sender.state {
+        case .began:
+            if let source = sender.view as? Source {
+                switch source.style {
+                case .rect: newShape = Rect(center: point)
+                case .diamond: newShape = Diamond(center: point)
+                case .oval: newShape = Oval(center: point)
+                }
+                addGestureRecognizers(for: newShape!)
+                canvas.addSubview(newShape!)
+                hideSources(true)
+                deleteLabel.isHidden = false
+            }
+        case .changed:
+            newShape?.translate(with: point - formerPosition)
+        default:
+            if deleteLabel.bounds.contains(sender.location(in: deleteLabel)) {
+                newShape?.removeFromSuperview()
+            }
+            newShape = nil
+            hideSources(false)
+            deleteLabel.isHidden = true
+        }
+        formerPosition = point
     }
     
     

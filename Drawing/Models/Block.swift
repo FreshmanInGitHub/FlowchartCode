@@ -13,36 +13,31 @@ class Block: NSObject, NSCoding {
     
     func encode(with aCoder: NSCoder) {
         aCoder.encode(center, forKey: "center")
-        aCoder.encode(type.rawValue, forKey: "type")
+        aCoder.encode(style.rawValue, forKey: "style")
         aCoder.encode(instructions, forKey: "instructions")
     }
     
     required init?(coder aDecoder: NSCoder) {
-        type = ShapeType(rawValue: aDecoder.decodeInteger(forKey: "type"))!
+        style = Shape.style(rawValue: aDecoder.decodeInteger(forKey: "style"))!
         center = aDecoder.decodeCGPoint(forKey: "center")
         instructions = aDecoder.decodeObject(forKey: "instructions") as! [Instruction]
     }
     
     init(shape: Shape) {
         switch shape {
-        case is Oval: type = .oval
-        case is Diamond: type = .diamond
-        default: type = .rect
+        case is Oval: style = .oval
+        case is Diamond: style = .diamond
+        default: style = .rect
         }
         instructions = shape.instructions
         center = shape.center
     }
     
     var instructions: [Instruction]
-    var type: ShapeType
+    var style: Shape.style
     var center: CGPoint
     var next: Block?
     var nextWhenFalse: Block?
     
-    enum ShapeType: Int {
-        case rect
-        case oval
-        case diamond
-    }
     
 }

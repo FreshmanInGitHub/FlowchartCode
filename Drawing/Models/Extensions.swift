@@ -169,3 +169,28 @@ extension Array where Element: Equatable {
         return false
     }
 }
+
+extension Double {
+    var simpleDescription: String {
+        let intSelf = Int(self)
+        if isEqual(to: Double(intSelf)) {
+            return intSelf.description
+        }
+        return self.description
+    }
+}
+
+extension UITextView {    
+    func scrollToBottom() {
+        scrollRangeToVisible(NSRange(location: text.count-2, length: 1))
+    }
+}
+
+extension DispatchTime: ExpressibleByIntegerLiteral, ExpressibleByFloatLiteral {
+    public init(integerLiteral value: Int) {
+        self = DispatchTime.now() + .seconds(value)
+    }
+    public init(floatLiteral value: Double) {
+        self = DispatchTime.now() + .milliseconds(Int(value * 1000))
+    }
+}

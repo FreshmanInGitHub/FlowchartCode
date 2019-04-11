@@ -8,51 +8,75 @@
 
 import UIKit
 
-class ExecutionController: UITableViewController {
-    var program = Program()
-    var current: Block?
-    var register = [String: Double]()
-    var cells = [UITableViewCell]()
+class ExecutionController: UIViewController {
+    @IBOutlet weak var textView: UITextView!
     
+    var program = Program()
+    var variable: String?
+    var register = [String: Double]()
+    var solidRange: NSRange?
+    var error: String? {
+        didSet {
+            if let error = error {
+                setText(error)
+            }
+        }
+    }
+    var current: Block? {
+        didSet {
+            backgoundQueue.async {
+                self.process()
+            }
+        }
+    }
+    
+    let backgoundQueue = DispatchQueue.global(qos: .background)
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        textView.delegate = self
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        reset()
         if let startIndex = program.entrance.index {
-            process(program.blocks[startIndex])
+            current = program.blocks[startIndex]
         } else {
-            programEnded()
+            current = nil
         }
     }
     
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(true)
+        if current != nil {
+            error = errorType.exitingError.rawValue
+        }
     }
     
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return cells.count
+    private func reset() {
+        variable = nil
+        register = [String: Double]()
+        solidRange = nil
+        error = nil
     }
     
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        return cells[indexPath.row]
-    }
-    
-    func process(_ block: Block?) {
-        var block = block
-        while block != nil {
-            var next: Block?
-            switch block!.type {
-            case .rect: next = processRect(block!)
-            case .diamond: next = processDiamond(block!)
-            case .oval: next = processOval(block!)
+    func process() {
+        if error == nil {
+            if let block = current {
+                switch block.style {
+                case .rect: processRect(block)
+                case .diamond: processDiamond(block)
+                case .oval: processOval(block)
+                }
+            } else {
+                setText("\n\nEND")
+                enableScrolling(true)
             }
-            block = next
-        }
-        if self.current == nil {
-            programEnded()
         }
     }
     
-    func processRect(_ block: Block) -> Block? {
+    func processRect(_ block: Block) {
         let instructions = block.instructions as! [AssignmentInstruction]
         for instruction in instructions {
             let variable = instruction.variable
@@ -62,14 +86,18 @@ class ExecutionController: UITableViewController {
             case .plus: register[variable] = operand1 + operand2
             case .minus: register[variable] = operand1 - operand2
             case .multiply: register[variable] = operand1 * operand2
-            case .divide: register[variable] = operand1 / operand2
-            default: register[variable] = operand1
+            case .divide:
+                if operand2 == 0 {
+                    error = errorType.dividendError.rawValue
+                }
+                register[variable] = operand1 / operand2
+            case .none: register[variable] = operand1
             }
         }
-        return block.next
+        current = block.next
     }
     
-    func processDiamond(_ block: Block) -> Block? {
+    func processDiamond(_ block: Block) {
         var result = true
         if let instruction = block.instructions.first as? IfInstruction {
             let operand1 = value(with: instruction.operand1)
@@ -79,74 +107,102 @@ class ExecutionController: UITableViewController {
             case .lessThanOrEqualTo: result = operand1 <= operand2
             case .greaterThan: result = operand1 > operand2
             case .lessThan: result = operand1 < operand2
-            default: result = operand1 == operand2
+            case .equalTo: result = operand1 == operand2
+            case .notEqualTo: result = operand1 != operand2
             }
         }
-        return result ? block.next : block.nextWhenFalse
+        current = result == true ? block.next : block.nextWhenFalse
     }
     
-    func processOval(_ block: Block) -> Block? {
-        var cell: UITableViewCell?
+    func processOval(_ block: Block) {
         if let instruction = block.instructions.first as? InteractionInstruction {
-            let indexPath = IndexPath(row: cells.count, section: 0)
             switch instruction.operator {
-            case .input:
-                let inputCell = tableView.dequeueReusableCell(withIdentifier: "InputCell", for: indexPath) as! InputCell
-                inputCell.textField.delegate = self
-                inputCell.label.text = instruction.content + " = "
-                self.current = block
-                cell = inputCell
             case .output:
-                cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                cell!.textLabel?.text = instruction.content + " = " + value(with: instruction.content).description
+                let value = self.value(with: instruction.content)
+                setText("\n\n  " + instruction.content + " = " + value.simpleDescription)
+            case .input:
+                variable = instruction.content
+                setText("\n\n  " + instruction.content + " = ")
+                DispatchQueue.main.async {
+                    self.textView.isEditable = true
+                    self.enableScrolling(true)
+                }
             case .print:
-                cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                cell!.textLabel?.text = instruction.content
+                setText("\n\n  " + instruction.content)
             }
-            cells.append(cell!)
-            tableView.insertRows(at: [indexPath], with: .automatic)
         }
-        return cell is InputCell ? nil : block.next
+        if variable == nil {
+            DispatchQueue.main.asyncAfter(deadline: 0.05) {
+                self.current = block.next
+            }
+        }
     }
     
-    func programEnded() {
-        let indexPath = IndexPath(row: cells.count, section: 0)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-        cell.textLabel?.text = "End"
-        cells.append(cell)
-        tableView.insertRows(at: [indexPath], with: .automatic)
-    }
     
     func value(with operand: String) -> Double {
         return Double(operand) ?? register[operand] ?? 0
     }
     
-}
-
-extension  ExecutionController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
-        if reason == .committed, let block = current {
-            if let value = Double(textField.text!), let instruction = block.instructions[0] as? InteractionInstruction {
-                register[instruction.content] = value
-                let indexPath = IndexPath(row: cells.count-1, section: 0)
-                let cell = tableView.dequeueReusableCell(withIdentifier: "OutputCell", for: indexPath)
-                cell.textLabel?.text = instruction.content + " = " + value.description
-                cells[indexPath.row] = cell
-                tableView.reloadRows(at: [indexPath], with: .automatic)
-                let next = block.next
-                current = nil
-                textField.text = nil
-                process(next)
+    func setText(_ text: String) {
+        DispatchQueue.main.async {
+            if let text = self.textView.text, text.count > 5000 {
+                self.textView.text.removeFirst(2500)
+            }
+            self.textView.text.append(text)
+            self.textView.scrollToBottom()
+        }
+    }
+    
+    func enableScrolling(_ enabled: Bool) {
+        DispatchQueue.main.async {
+            self.textView.isUserInteractionEnabled = enabled
+            if enabled, !self.textView.text.starts(with: "START") {
+                while self.textView.text.first != "\n" {
+                    self.textView.text.removeFirst()
+                }
             }
         }
     }
     
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if let _ = Double(textField.text ?? "") {
-            textField.endEditing(true)
-            return true
+    enum errorType: String {
+        case dividendError = "\n\nERROR: Dividend can't be 0!"
+        case exitingError = "\n\nERROR: Exiting when unfinished!"
+    }
+    
+}
+
+extension ExecutionController: UITextViewDelegate {
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        solidRange = NSRange(location: 0, length: textView.text.count)
+        return true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        textView.isEditable = false
+        enableScrolling(false)
+        variable = nil
+        solidRange = nil
+        current = current?.next
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if solidRange == nil { return true }
+        
+        if solidRange!.intersection(range) != nil { return false }
+        
+        if text != "\n" { return true }
+        
+        if var subString = textView.text {
+            subString.removeSubrange(Range(solidRange!, in: subString)!)
+            if let value = Double(subString), let variable = variable {
+                register[variable] = value
+                textView.endEditing(true)
+            }
         }
-        textField.shiver()
+        
         return false
     }
+    
 }
+

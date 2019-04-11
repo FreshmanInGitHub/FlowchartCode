@@ -33,13 +33,13 @@ class InteractionInstruction: Instruction {
     override func encode(with aCoder: NSCoder) {
         super.encode(with: aCoder)
         aCoder.encode(content, forKey: "content")
-        aCoder.encode(`operator`.rawValue, forKey: "type")
+        aCoder.encode(`operator`.rawValue, forKey: "operator")
     }
     
     required init(coder aDecoder: NSCoder) {
         super.init()
         content = aDecoder.decodeString(forKey: "content")!
-        `operator` = Operator(rawValue: aDecoder.decodeString(forKey: "type") ?? "print")!
+        `operator` = Operator(rawValue: aDecoder.decodeString(forKey: "operator") ?? "print")!
     }
     
     enum Operator: String {

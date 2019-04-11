@@ -13,17 +13,12 @@ class EditingView: UIView {
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var boundingView: UIView!
     
-    enum ShapeType {
-    case rect
-    case diamond
-    case oval
-    }
-    
-    var shapeType = ShapeType.rect {
+    var shapeType = Shape.style.rect {
         didSet {
+            
             // Setting tableView.
             if shapeType == .rect {
-                tableView.frame = boundingView.bounds
+                tableView.frame = CGRect(x: 0, y: 2, width: boundingView.bounds.width, height: boundingView.bounds.height-4)
                 tableView.isScrollEnabled = true
                 tableView.separatorStyle = .singleLine
             } else {

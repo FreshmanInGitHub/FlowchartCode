@@ -69,16 +69,16 @@ class Shape: UIView, Customized {
         return CGPoint()
     }
     
-    var line: LineForConnecting?
+    var line: Line?
     
     func resetLine(_ shouldResetLine: Bool) {
         if shouldResetLine {
-            line = nextShape == nil ? nil : LineForConnecting(initiator: self, target: nextShape!, color: UIColor.black)
+            line = nextShape == nil ? nil : Line(initiator: self, target: nextShape!, color: UIColor.black)
         }
     }
     
-    func lineForPanning(to point: CGPoint) -> LineForConnecting? {
-        return nextShape == nil ? LineForConnecting(initiator: self, point: point, color: .black) : nil
+    func lineForPanning(to point: CGPoint) -> Line? {
+        return nextShape == nil ? Line(initiator: self, point: point, color: .black) : nil
     }
     
     func related(to shape: Shape?) -> Bool {

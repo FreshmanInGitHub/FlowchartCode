@@ -7,12 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6F283A2321C5E7E700E4BF98 /* LineForConnecting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */; };
-		6F4D6289221C219200731463 /* InputCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D6288221C219200731463 /* InputCell.swift */; };
+		6F283A2321C5E7E700E4BF98 /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F283A2221C5E7E700E4BF98 /* Line.swift */; };
+		6F3FB787225F3B73006419A5 /* TextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F3FB786225F3B73006419A5 /* TextFieldCell.swift */; };
 		6F4D628B221C4D6F00731463 /* ProgramTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */; };
 		6F4EA04A21E8542D00DB7232 /* DoubleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */; };
 		6F5F87DC224DC220009A679A /* EntrancePath.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DB224DC220009A679A /* EntrancePath.swift */; };
-		6F5F87DE224DCEB8009A679A /* Line.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DD224DCEB8009A679A /* Line.swift */; };
+		6F5F87DE224DCEB8009A679A /* BasicLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F5F87DD224DCEB8009A679A /* BasicLine.swift */; };
 		6F716AD021EED17F00413E18 /* SingleTextFieldCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */; };
 		6F728B87225872E10072AB8B /* EditingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F728B86225872E10072AB8B /* EditingView.swift */; };
 		6F728B89225874280072AB8B /* EditingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F728B88225874280072AB8B /* EditingViewController.swift */; };
@@ -44,12 +44,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LineForConnecting.swift; sourceTree = "<group>"; };
-		6F4D6288221C219200731463 /* InputCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputCell.swift; sourceTree = "<group>"; };
+		6F283A2221C5E7E700E4BF98 /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		6F3FB786225F3B73006419A5 /* TextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextFieldCell.swift; sourceTree = "<group>"; };
 		6F4D628A221C4D6F00731463 /* ProgramTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgramTableViewController.swift; sourceTree = "<group>"; };
 		6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DoubleTextFieldCell.swift; sourceTree = "<group>"; };
 		6F5F87DB224DC220009A679A /* EntrancePath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntrancePath.swift; sourceTree = "<group>"; };
-		6F5F87DD224DCEB8009A679A /* Line.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Line.swift; sourceTree = "<group>"; };
+		6F5F87DD224DCEB8009A679A /* BasicLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BasicLine.swift; sourceTree = "<group>"; };
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
 		6F728B86225872E10072AB8B /* EditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingView.swift; sourceTree = "<group>"; };
 		6F728B88225874280072AB8B /* EditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
@@ -192,7 +192,7 @@
 				6F4EA04921E8542D00DB7232 /* DoubleTextFieldCell.swift */,
 				6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */,
 				6FCC492021E86C5200081596 /* InstructionCell.swift */,
-				6F4D6288221C219200731463 /* InputCell.swift */,
+				6F3FB786225F3B73006419A5 /* TextFieldCell.swift */,
 			);
 			path = Cells;
 			sourceTree = "<group>";
@@ -200,9 +200,9 @@
 		6FEBA282224DF3BB00FB496E /* Line */ = {
 			isa = PBXGroup;
 			children = (
-				6F5F87DD224DCEB8009A679A /* Line.swift */,
+				6F5F87DD224DCEB8009A679A /* BasicLine.swift */,
 				6F5F87DB224DC220009A679A /* EntrancePath.swift */,
-				6F283A2221C5E7E700E4BF98 /* LineForConnecting.swift */,
+				6F283A2221C5E7E700E4BF98 /* Line.swift */,
 			);
 			path = Line;
 			sourceTree = "<group>";
@@ -297,11 +297,11 @@
 				6F728B89225874280072AB8B /* EditingViewController.swift in Sources */,
 				6F81F7412227D37400EA6918 /* Extensions.swift in Sources */,
 				6FEBA286224E140000FB496E /* Customized.swift in Sources */,
-				6F5F87DE224DCEB8009A679A /* Line.swift in Sources */,
-				6F4D6289221C219200731463 /* InputCell.swift in Sources */,
+				6F5F87DE224DCEB8009A679A /* BasicLine.swift in Sources */,
 				6FB68BD221C3F1F900A68969 /* Oval.swift in Sources */,
 				6F86FFA2222539530009F84B /* LinearFunction.swift in Sources */,
 				6F76AC1C21905A4A000E65AB /* AppDelegate.swift in Sources */,
+				6F3FB787225F3B73006419A5 /* TextFieldCell.swift in Sources */,
 				6F8ACEB421E390920081ED96 /* Instruction.swift in Sources */,
 				6F917920225C9AB500D753DF /* Source.swift in Sources */,
 				6F81F7432227DB4B00EA6918 /* InteractionInstruction.swift in Sources */,
@@ -309,7 +309,7 @@
 				6FF11D2621F6FA2C0042D311 /* ExecutionController.swift in Sources */,
 				6FB68BD021C391ED00A68969 /* Rect.swift in Sources */,
 				6FA0DD432223D0760017A76B /* Block.swift in Sources */,
-				6F283A2321C5E7E700E4BF98 /* LineForConnecting.swift in Sources */,
+				6F283A2321C5E7E700E4BF98 /* Line.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

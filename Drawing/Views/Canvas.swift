@@ -22,8 +22,8 @@ class Canvas: UIView {
         return shapes
     }
     
-    var lines: [LineForConnecting] {
-        var lines = [LineForConnecting]()
+    var lines: [Line] {
+        var lines = [Line]()
         for shape in shapes {
             if let line = shape.line {
                 lines.append(line)
@@ -35,7 +35,7 @@ class Canvas: UIView {
         return lines
     }
     
-    var draggingLine: LineForConnecting?
+    var draggingLine: Line?
     
     override func draw(_ rect: CGRect) {
         for line in lines {

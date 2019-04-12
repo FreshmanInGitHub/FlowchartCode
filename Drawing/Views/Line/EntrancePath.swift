@@ -8,7 +8,7 @@
 
 import UIKit
 
-class EntrancePath: Line {
+class EntrancePath: BasicLine {
     
     override var end: CGPoint { return endValue }
     
@@ -24,7 +24,7 @@ class EntrancePath: Line {
         move(to: CGPoint())
         addLine(to: CGPoint(x: -40, y: 0))
         if let shape = shape {
-            apply(CGAffineTransform(rotationAngle: Line.angle(between: point, and: shape.center)))
+            apply(CGAffineTransform(rotationAngle: BasicLine.angle(between: point, and: shape.center)))
             apply(CGAffineTransform(translation: shape.extendedEntry(for: point)))
             endValue = endValue+shape.extendedEntry(for: point)
         } else {

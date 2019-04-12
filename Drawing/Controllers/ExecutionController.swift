@@ -10,15 +10,17 @@ import UIKit
 
 class ExecutionController: UIViewController {
     @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var toolBar: UIToolbar!
+    @IBOutlet weak var textField: UITextField!
     
     var program = Program()
     var variable: String?
     var register = [String: Double]()
     var solidRange: NSRange?
-    var error: String? {
+    var stoppingReason: stoppingReasons? {
         didSet {
-            if let error = error {
-                setText(error)
+            if let text = stoppingReason?.rawValue {
+                setText(text)
             }
         }
     }
@@ -35,6 +37,7 @@ class ExecutionController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.delegate = self
+        textField.delegate = self
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -50,7 +53,7 @@ class ExecutionController: UIViewController {
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(true)
         if current != nil {
-            error = errorType.exitingError.rawValue
+            stoppingReason = stoppingReasons.exiting
         }
     }
     
@@ -58,11 +61,11 @@ class ExecutionController: UIViewController {
         variable = nil
         register = [String: Double]()
         solidRange = nil
-        error = nil
+        stoppingReason = nil
     }
     
     func process() {
-        if error == nil {
+        if stoppingReason == nil {
             if let block = current {
                 switch block.style {
                 case .rect: processRect(block)
@@ -70,7 +73,10 @@ class ExecutionController: UIViewController {
                 case .oval: processOval(block)
                 }
             } else {
-                setText("\n\nEND")
+                DispatchQueue.main.async {
+                    self.navigationItem.rightBarButtonItem = nil
+                }
+                stoppingReason = .finished
                 enableScrolling(true)
             }
         }
@@ -88,7 +94,7 @@ class ExecutionController: UIViewController {
             case .multiply: register[variable] = operand1 * operand2
             case .divide:
                 if operand2 == 0 {
-                    error = errorType.dividendError.rawValue
+                    stoppingReason = stoppingReasons.dividendError
                 }
                 register[variable] = operand1 / operand2
             case .none: register[variable] = operand1
@@ -132,7 +138,8 @@ class ExecutionController: UIViewController {
             }
         }
         if variable == nil {
-            DispatchQueue.main.asyncAfter(deadline: 0.05) {
+            // Must be in mainQueue or UI will not be able to respond.
+            DispatchQueue.main.async {
                 self.current = block.next
             }
         }
@@ -143,30 +150,53 @@ class ExecutionController: UIViewController {
         return Double(operand) ?? register[operand] ?? 0
     }
     
-    func setText(_ text: String) {
+    func setText(_ newText: String) {
         DispatchQueue.main.async {
-            if let text = self.textView.text, text.count > 5000 {
-                self.textView.text.removeFirst(2500)
+            if var text = self.textView.text {
+                if text.count > 1000 {
+                    text.removeSubrange(...text.firstIndex(of: "\n")!)
+                    text.removeFirst()
+                }
+                text.append(newText)
+                self.textView.text = text
+                self.textView.scrollToBottom()
             }
-            self.textView.text.append(text)
-            self.textView.scrollToBottom()
         }
     }
     
     func enableScrolling(_ enabled: Bool) {
         DispatchQueue.main.async {
             self.textView.isUserInteractionEnabled = enabled
-            if enabled, !self.textView.text.starts(with: "START") {
-                while self.textView.text.first != "\n" {
-                    self.textView.text.removeFirst()
-                }
+            if enabled {
+                self.textView.scrollToBottom()
             }
         }
     }
     
-    enum errorType: String {
+    @IBAction func rightBarButtonPressed(_ sender: UIBarButtonItem) {
+        toolBar.isHidden = !toolBar.isHidden
+        var height = toolBar.frame.height
+        if toolBar.isHidden {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .pause, target: self, action: #selector(rightBarButtonPressed(_:)))
+            height = textView.frame.height+height
+            stoppingReason = nil
+            let current = self.current
+            self.current = current
+        } else {
+            navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(rightBarButtonPressed(_:)))
+            stoppingReason = .paused
+            height = textView.frame.height-height
+            enableScrolling(true)
+        }
+        textView.frame = CGRect(origin: textView.frame.origin, size: CGSize(width: textView.frame.width, height: height))
+        textView.scrollToBottom()
+    }
+    
+    enum stoppingReasons: String {
         case dividendError = "\n\nERROR: Dividend can't be 0!"
-        case exitingError = "\n\nERROR: Exiting when unfinished!"
+        case exiting = "\n\nERROR: Commit exiting."
+        case finished = "\n\nEND"
+        case paused = "\n\nPaused"
     }
     
 }
@@ -203,6 +233,22 @@ extension ExecutionController: UITextViewDelegate {
         
         return false
     }
-    
 }
 
+extension ExecutionController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if let text = textField.text, text.isDouble {
+            textField.shiver()
+            return false
+        }
+        textField.endEditing(true)
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField, reason: UITextField.DidEndEditingReason) {
+        if reason == .committed, let text = textField.text, !text.isEmpty {
+            setText("\n\n  \(text) = \(value(with: text).simpleDescription)")
+        }
+    }
+    
+}

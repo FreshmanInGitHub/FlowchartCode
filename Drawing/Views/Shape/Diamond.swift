@@ -40,22 +40,22 @@ class Diamond: Shape {
             if let line = line {
                 line.color = UIColor.green
             }
-            lineWhenFalse = nextShapeWhenFalse == nil ? nil : LineForConnecting(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
+            lineWhenFalse = nextShapeWhenFalse == nil ? nil : Line(initiator: self, target: nextShapeWhenFalse!, color: UIColor.red)
         }
     }
     
-    var lineWhenFalse: LineForConnecting?
+    var lineWhenFalse: Line?
     
     override func related(to shape: Shape?) -> Bool {
         return super.related(to: shape) || nextShapeWhenFalse == shape
     }
     
-    override func lineForPanning(to point: CGPoint) -> LineForConnecting? {
+    override func lineForPanning(to point: CGPoint) -> Line? {
         if let line = super.lineForPanning(to: point) {
             line.color = .green
             return line
         }
-        return nextShapeWhenFalse == nil ? LineForConnecting(initiator: self, point: point, color: .red) : nil
+        return nextShapeWhenFalse == nil ? Line(initiator: self, point: point, color: .red) : nil
     }
     
     override func extendedEntry(for positionInShapeView: CGPoint) -> CGPoint {

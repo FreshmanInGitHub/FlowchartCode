@@ -154,19 +154,22 @@ extension EditingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: InstructionCell
+        let cell: TextFieldCell
+        let instruction = shape.instructions[indexPath.row]
         switch editingView.shapeType {
         case .rect:
-            let instruction = shape.instructions[indexPath.row] as! AssignmentInstruction
+            let instruction = instruction as! AssignmentInstruction
             if instruction.operator == .none {
-                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! DoubleTextFieldCell
+                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
             } else {
-                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "TrippleTextFieldCell", for: indexPath) as! TrippleTextFieldCell
+                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "TrippleTextFieldCell", for: indexPath) as! TextFieldCell
             }
-        case .diamond: cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! DoubleTextFieldCell
-        case .oval: cell = editingView.tableView.dequeueReusableCell(withIdentifier: "SingleTextFieldCell", for: indexPath) as! SingleTextFieldCell
+        case .diamond:
+            cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
+        case .oval:
+            cell = editingView.tableView.dequeueReusableCell(withIdentifier: "SingleTextFieldCell", for: indexPath) as! TextFieldCell
         }
-        cell.instruction = shape.instructions[indexPath.row]
+        cell.instruction = instruction
         return cell
     }
     
@@ -188,7 +191,6 @@ extension EditingViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "Cell", for: indexPath)
         let label = UILabel(frame: cell.frame)
-        label.textColor = .darkGray
         label.adjustsFontSizeToFitWidth = true
         //label.font = UIFont(descriptor: .preferredFontDescriptor(withTextStyle: .body), size: shape is Oval ? 20 : 25)
         label.textAlignment = .center

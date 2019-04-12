@@ -53,7 +53,7 @@
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
 		6F728B86225872E10072AB8B /* EditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingView.swift; sourceTree = "<group>"; };
 		6F728B88225874280072AB8B /* EditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
-		6F76AC1821905A4A000E65AB /* Drawing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Drawing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F76AC1821905A4A000E65AB /* FlowcharCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowcharCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F76AC1B21905A4A000E65AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F76AC2221905A4C000E65AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F76AC2521905A4C000E65AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -119,7 +119,7 @@
 		6F76AC0F21905A4A000E65AB = {
 			isa = PBXGroup;
 			children = (
-				6F76AC1A21905A4A000E65AB /* Drawing */,
+				6F76AC1A21905A4A000E65AB /* FlowchartCode */,
 				6F76AC1921905A4A000E65AB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,12 +127,12 @@
 		6F76AC1921905A4A000E65AB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6F76AC1821905A4A000E65AB /* Drawing.app */,
+				6F76AC1821905A4A000E65AB /* FlowcharCode.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		6F76AC1A21905A4A000E65AB /* Drawing */ = {
+		6F76AC1A21905A4A000E65AB /* FlowchartCode */ = {
 			isa = PBXGroup;
 			children = (
 				6F8ACEB821E390B60081ED96 /* Controllers */,
@@ -144,7 +144,7 @@
 				6F76AC2421905A4C000E65AB /* LaunchScreen.storyboard */,
 				6F76AC2721905A4C000E65AB /* Info.plist */,
 			);
-			path = Drawing;
+			path = FlowchartCode;
 			sourceTree = "<group>";
 		};
 		6F8ACEA921E3906C0081ED96 /* Models */ = {
@@ -210,9 +210,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F76AC1721905A4A000E65AB /* Drawing */ = {
+		6F76AC1721905A4A000E65AB /* FlowcharCode */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "Drawing" */;
+			buildConfigurationList = 6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowcharCode" */;
 			buildPhases = (
 				6F76AC1421905A4A000E65AB /* Sources */,
 				6F76AC1521905A4A000E65AB /* Frameworks */,
@@ -222,9 +222,9 @@
 			);
 			dependencies = (
 			);
-			name = Drawing;
+			name = FlowcharCode;
 			productName = Drawing;
-			productReference = 6F76AC1821905A4A000E65AB /* Drawing.app */;
+			productReference = 6F76AC1821905A4A000E65AB /* FlowcharCode.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -243,7 +243,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "Drawing" */;
+			buildConfigurationList = 6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowcharCode" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -256,7 +256,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6F76AC1721905A4A000E65AB /* Drawing */,
+				6F76AC1721905A4A000E65AB /* FlowcharCode */,
 			);
 		};
 /* End PBXProject section */
@@ -447,16 +447,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2J633TRM45;
-				INFOPLIST_FILE = Drawing/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				INFOPLIST_FILE = "$(SRCROOT)/FlowchartCode/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Young.Drawing;
+				PRODUCT_BUNDLE_IDENTIFIER = Young.FlowchartCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -466,16 +468,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 2J633TRM45;
-				INFOPLIST_FILE = Drawing/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
+				INFOPLIST_FILE = "$(SRCROOT)/FlowchartCode/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Young.Drawing;
+				PRODUCT_BUNDLE_IDENTIFIER = Young.FlowchartCode;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -484,7 +488,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "Drawing" */ = {
+		6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowcharCode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F76AC2821905A4C000E65AB /* Debug */,
@@ -493,7 +497,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "Drawing" */ = {
+		6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowcharCode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F76AC2B21905A4C000E65AB /* Debug */,

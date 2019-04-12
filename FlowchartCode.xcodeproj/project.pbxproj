@@ -53,7 +53,7 @@
 		6F716ACF21EED17F00413E18 /* SingleTextFieldCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleTextFieldCell.swift; sourceTree = "<group>"; };
 		6F728B86225872E10072AB8B /* EditingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingView.swift; sourceTree = "<group>"; };
 		6F728B88225874280072AB8B /* EditingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditingViewController.swift; sourceTree = "<group>"; };
-		6F76AC1821905A4A000E65AB /* FlowcharCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowcharCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6F76AC1821905A4A000E65AB /* FlowchartCode.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowchartCode.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F76AC1B21905A4A000E65AB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6F76AC2221905A4C000E65AB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6F76AC2521905A4C000E65AB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -127,7 +127,7 @@
 		6F76AC1921905A4A000E65AB /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6F76AC1821905A4A000E65AB /* FlowcharCode.app */,
+				6F76AC1821905A4A000E65AB /* FlowchartCode.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,9 +210,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6F76AC1721905A4A000E65AB /* FlowcharCode */ = {
+		6F76AC1721905A4A000E65AB /* FlowchartCode */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowcharCode" */;
+			buildConfigurationList = 6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowchartCode" */;
 			buildPhases = (
 				6F76AC1421905A4A000E65AB /* Sources */,
 				6F76AC1521905A4A000E65AB /* Frameworks */,
@@ -222,9 +222,9 @@
 			);
 			dependencies = (
 			);
-			name = FlowcharCode;
+			name = FlowchartCode;
 			productName = Drawing;
-			productReference = 6F76AC1821905A4A000E65AB /* FlowcharCode.app */;
+			productReference = 6F76AC1821905A4A000E65AB /* FlowchartCode.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -243,7 +243,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowcharCode" */;
+			buildConfigurationList = 6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowchartCode" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -256,7 +256,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6F76AC1721905A4A000E65AB /* FlowcharCode */,
+				6F76AC1721905A4A000E65AB /* FlowchartCode */,
 			);
 		};
 /* End PBXProject section */
@@ -488,7 +488,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowcharCode" */ = {
+		6F76AC1321905A4A000E65AB /* Build configuration list for PBXProject "FlowchartCode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F76AC2821905A4C000E65AB /* Debug */,
@@ -497,7 +497,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowcharCode" */ = {
+		6F76AC2A21905A4C000E65AB /* Build configuration list for PBXNativeTarget "FlowchartCode" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6F76AC2B21905A4C000E65AB /* Debug */,

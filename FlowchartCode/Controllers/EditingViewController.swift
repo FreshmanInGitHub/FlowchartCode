@@ -12,6 +12,7 @@ class EditingViewController: UIViewController {
     @IBOutlet var editingView: EditingView!
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var flowLayout: UICollectionViewFlowLayout!
+    @IBOutlet weak var tableView: UITableView!
     
     var shape = Shape()
     
@@ -29,26 +30,34 @@ class EditingViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        editingView.tableView.delegate = self
-        editingView.tableView.dataSource = self
+        tableView.delegate = self
+        tableView.dataSource = self
         collectionView.dataSource = self
     }
     
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        switch shape {
-        case is Diamond: editingView.shapeType = .diamond
-        case is Oval: editingView.shapeType = .oval
-        default: editingView.shapeType = .rect
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        editingView.boundsForPath = CGRect(x: 5, y: 5, width: editingView.frame.width-10, height: collectionView.frame.minY-10)
+        if shape is Rect {
+            editingView.path = editingView.rectPath
+            tableView.isScrollEnabled = true
+            tableView.separatorStyle = .singleLine
+            navigationItem.rightBarButtonItem = editButtonItem
+        } else {
+            editingView.path = shape is Diamond ? editingView.diamondPath : editingView.ovalPath
+            tableView.frame = CGRect(x: 10, y: editingView.boundsForPath.midY-25, width: editingView.frame.width-20, height: 50)
+            tableView.isScrollEnabled = false
+            tableView.separatorStyle = .none
+            navigationItem.rightBarButtonItem = nil
         }
-        navigationItem.rightBarButtonItem = shape is Rect ? editButtonItem : nil
-        editingView.tableView.reloadData()
-        collectionView.reloadData()
+        
+        tableView.setNeedsDisplay()
+        editingView.setNeedsDisplay()
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        editingView.tableView.setEditing(editing, animated: animated)
+        tableView.setEditing(editing, animated: animated)
     }
     
     @IBAction func dragLabel(_ sender: UILongPressGestureRecognizer) {
@@ -81,12 +90,12 @@ class EditingViewController: UIViewController {
     
     // appending
     func append(_ text: String) {
-        switch editingView.shapeType {
-        case .rect: appendForRect(text)
-        case .diamond: appendForDiamond(text)
-        case .oval: appendForOval(text)
+        switch shape {
+        case is Diamond: appendForDiamond(text)
+        case is Oval: appendForOval(text)
+        default: appendForRect(text)
         }
-        editingView.tableView.reloadData()
+        tableView.reloadData()
     }
     
     func appendForRect(_ text: String) {
@@ -154,24 +163,24 @@ extension EditingViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return editingView.shapeType == .rect
+        return shape is Rect
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell: TextFieldCell
         let instruction = shape.instructions[indexPath.row]
-        switch editingView.shapeType {
-        case .rect:
+        switch shape {
+        case is Diamond:
+            cell = tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
+        case is Oval:
+            cell = tableView.dequeueReusableCell(withIdentifier: "SingleTextFieldCell", for: indexPath) as! TextFieldCell
+        default:
             let instruction = instruction as! AssignmentInstruction
             if instruction.operator == .none {
-                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
             } else {
-                cell = editingView.tableView.dequeueReusableCell(withIdentifier: "TrippleTextFieldCell", for: indexPath) as! TextFieldCell
+                cell = tableView.dequeueReusableCell(withIdentifier: "TrippleTextFieldCell", for: indexPath) as! TextFieldCell
             }
-        case .diamond:
-            cell = editingView.tableView.dequeueReusableCell(withIdentifier: "DoubleTextFieldCell", for: indexPath) as! TextFieldCell
-        case .oval:
-            cell = editingView.tableView.dequeueReusableCell(withIdentifier: "SingleTextFieldCell", for: indexPath) as! TextFieldCell
         }
         cell.instruction = instruction
         return cell
